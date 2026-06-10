@@ -207,35 +207,96 @@
     </footer>
 
     <script>
+                 // =====================================================================
+        // 1. قاعدة بيانات الأسئلة الشاملة (مرتبة حسب طلبك)
+        // =====================================================================
         const examQuestions = {
-            "Math103_2024": {
-                title: "Math103 (2024) - Exam",
+            // -- أولاً: الشيتات والأسئلة المحلولة --
+            "room_5": {
+                title: "Solved Problems IT - Statistics",
                 questions: [
-                    { type: "mcq", text: "The condition of Mutually exclusive events, is $P(A \\\\cap B) =$", options: ["$P(A) - P(B)$", "$P(A) + P(B)$", "$0$", "$P(A)*P(B)$"], correct: 2 },
-                    { type: "mcq", text: "If $P(x)$ is a probability mass function, then", options: ["$\\\\sum f(x) = 0$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 1$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 0$", "$\\\\sum f(x) = 1$"], correct: 3 },
-                    { type: "mcq", text: "The correct formula for the P.m.f.of Poisson distribution is:", options: ["$p^{x}q^{1 - x}$", "$\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$", "$\\\\frac{1}{\\\\sqrt{2\\\\pi}} e^{-\\\\frac{1}{2} z^{2}}$", "$C_{n}^{x} p^{x} q^{n - x}$"], correct: 1 },
-                    { type: "mcq", text: "If A and B are independent events, then which of the following statement(s) are true?", options: ["A and $B^{c}$ are independent", "A and B are independent", "A and $B^{c}$ are independent", "All of preceding"], correct: 3 },
-                    { type: "mcq", text: "If $X$ follows the Poisson distribution, then the characteristics values are:", options: ["$np, npq, \\\\sqrt{npq}$", "$\\\\mu, \\\\sigma^{2}, \\\\sigma$", "$\\\\lambda, \\\\lambda, \\\\sqrt{\\\\lambda}$", "$X, \\\\mu, \\\\sigma$"], correct: 2 },
-                    { type: "mcq", text: "If the correlation coefficient $r = 1$ , indicates:", options: ["No linear relationship", "A perfect positive linear relationship", "A negative linear relationship", "None of them"], correct: 1 },
-                    { type: "mcq", text: "The formula for calculating the mode in continuous data given as:", options: ["$\\\\frac{\\\\sum_{i = 1}^{n}x}{n}$", "$L + \\\\left(\\\\frac{D_{1}}{D_{1} + D_{2}}\\\\right)*h$", "$L + \\\\left(\\\\frac{N - C}{f_{m}}\\\\right)*h$", "None of them"], correct: 1 },
-                    { type: "mcq", text: "The Spearman rank correlation coefficient take the formula:", options: ["$\\\\frac{\\\\sum(x_i - \\\\overline{x})(y_i - \\\\overline{y})}{N S_x S_y}$", "$\\\\frac{\\\\sum x_i y_i - N\\\\overline{x}\\\\overline{y}}{\\\\sum x_i^2 - N\\\\overline{x}^2}$", "$1 - \\\\frac{6\\\\sum d_i^2}{n(n^2 - 1)}$", "None of them"], correct: 2 },
-                    { type: "mcq", text: "The Variance for population in a contiuous data given by:", options: ["$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})^{2}f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}|x_i - \\\\overline{x}|f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i + \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$"], correct: 0 },
-                    { type: "mcq", text: "One of these measures is considered as a measure of dispersion:", options: ["Mean", "Mode", "Median", "Range"], correct: 3 },
-                    { type: "subjective", text: "Given the numbers: 8, 6.77, 2.59, and 37.03% (treat as 0.3703). Find: 1) Mean, Median, Mode. 2) Range, Variance, Standard deviation, Coefficient of variation." },
-                    { type: "subjective", text: "A continuous random variable X has probability function: $f(x) = k(x^3 + 1)$ for $0 \\\\leq x \\\\leq 1$, zero elsewhere. Find: a) The constant $k$. b) $P(1 \\\\leq X \\\\leq 2)$. c) $E[X]$, $V(X)$, and $\\\\sigma$. d) $E[5X + 3]$ and $V(3X - 7)$." },
-                    { type: "subjective", text: "The following table shows the first two grades of 6 students: X: 1, 2, 4, 6, 7, 10 and Y: 9, 6, 4, 1, 2, 8. i) Calculate Pearson correlation coefficient. ii) Find equation of regression line of Y on X." },
-                    { type: "subjective", text: "The following data regarding marks in M224 and M208: M224: C, B, A, C, B, F, D, B and M208: C, B, A, D, C, D, C, A. Find Spearman rank correlation coefficient." }
+                  { type: "mcq", text: "UV-B intensity: weak, moderate, strong, very strong, extreme. Type of data:", options: ["Categorical ordinal", "Discrete numerical", "Categorical nominal", "Exponential"], correct: 0 },
+                  { type: "mcq", text: "A complete set of items is called:", options: ["Population", "Sample", "Variable", "Constant"], correct: 0 },
+                  { type: "mcq", text: "Characteristics that vary from one individual to another are:", options: ["Variables", "Sample", "Population", "Constant"], correct: 0 },
+                  { type: "mcq", text: "If sd=6 and each observation divided by 6, new sd =", options: ["4", "2", "3", "1"], correct: 3 },
+                  { type: "mcq", text: "Best measure for data: 10,20,20,30,35,40,400:", options: ["Mean", "Variance", "Range", "Median"], correct: 3 },
+                  { type: "mcq", text: "UV-B: weak, moderate, strong, extreme. Best measure:", options: ["Mean", "Median", "Mode", "Mode and Median"], correct: 3 },
+                  { type: "mcq", text: "CV=58%, sd=21.2, mean =", options: ["36.6", "34.8", "24.4", "None"], correct: 0 },
+                  { type: "mcq", text: "$\\\\sum x_i = 20$, $\\\\bar{x}=2$, rank of median =", options: ["2", "5", "6", "5,6"], correct: 1 },
+                  { type: "mcq", text: "$\\\\sum x_i^2=1530$, n=10 (population), $\\\\bar{x}=12$, CV =", options: ["36%", "41%", "25%", "None"], correct: 2 },
+                  { type: "mcq", text: "Class of 100 students, 80 boys avg=70, class avg=72, girls avg =", options: ["80", "71.5", "68", "67.5"], correct: 0 },
+                  { type: "mcq", text: "For a given set of data there is:", options: ["One and only one mean", "One and only one median", "One or more modes", "All preceding"], correct: 3 },
+                  { type: "mcq", text: "$\\\\sum x_i = 40$, standard error=0.3, variance=9, mean =", options: ["0.2", "0.9", "0.3", "0.4"], correct: 0 },
+                  { type: "mcq", text: "Coefficient of range for data: 1400,1450,1520,1380,1485,1495,1575,1440", options: ["0.066", "0.072", "0.082", "0.092"], correct: 0 },
+                  { type: "mcq", text: "Mean of 100 items=49, three items 60,70,80 wrongly read as 40,20,50. Correct mean =", options: ["50", "48", "82.5", "80"], correct: 1 },
+                  { type: "mcq", text: "Characteristics that vary from one individual to another are:", options: ["Constants", "Variables", "Sample", "Population"], correct: 1 },
+                  { type: "mcq", text: "Which is NOT a measure of central tendency?", options: ["Mean", "Median", "Mode", "Range"], correct: 3 },
+                  { type: "mcq", text: "Ranking students from highest GPA to lowest is example of:", options: ["Categorical ordinal", "Ratio", "Categorical nominal", "Interval"], correct: 0 },
+                  { type: "mcq", text: "Which central values can be used for nominal categorical variables?", options: ["Only mean and median", "Mode, median, mean", "Only mode and median", "Only mode"], correct: 3 },
+                  { type: "mcq", text: "Number of patients admitted to hospital each day is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 2 },
+                  { type: "mcq", text: "Height of individuals in a study is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 3 },
+                  { type: "mcq", text: "Level of education is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 1 },
+                  { type: "mcq", text: "Current marital status is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 0 },
+                  { type: "mcq", text: "Place of delivery is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 0 },
+                  { type: "mcq", text: "Your favorite color is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 0 },
+                  { type: "mcq", text: "Gender of employee is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 0 },
+                  { type: "mcq", text: "Your preferable band of shoes is:", options: ["Qualitative nominal", "Qualitative ordinal", "Quantitative discrete", "Quantitative continuous"], correct: 0 },
+                  { type: "subjective", text: "Tell whether each is discrete (D) or continuous (C): a) Numbers of shares sold daily. b) Temperatures recorded every half hour. c) Lifetimes of TV tubes. d) Yearly incomes of college professors. e) Lengths of 1000 bolts." }
                 ]
             },
-            "Math103_2023_DrHossam": {
-                title: "Math103 (2023) Dr. Hossam",
+            "room_4": {
+                title: "Assignment IT - Statistics",
                 questions: [
-                    { type: "subjective", text: "a) Define: Mutually exclusive events; Independent events; Probability Axioms. b) A sample of four electronic components: Pr[0 defect]=0.6, Pr[1]=0.2, Pr[2]=0.04, Pr[3]=0.03, Pr[4]=0.01. i) Probability of at least three defective? ii) Probability of at most one defective?" },
-                    { type: "subjective", text: "a) Find G.M, A.M, median, mode, $\\\\sigma$, and C.V for the set: 25, 8, 15, 5, 7. b) Prove that $f(x) = C_n^x p^x q^{n-x}, x=0,1,...,n$ is a probability mass function; find the moment generating function and $\\\\sigma$." },
-                    { type: "subjective", text: "a) Prove that $f(x) = \\\\frac{1}{b-a}, a<x<b$ is a density function and find $E(x^7)$. b) A sample of 49 cars had mean 70 days, population sd = 7 days. Find the best point estimate of population mean and the 95% confidence interval ($z_{0.025}=1.96$)." },
-                    { type: "subjective", text: "Given data for two tests: X: 9, 5, 3, 7, 11 and Y: 5, 6, 1, 9, 9. a) Calculate correlation coefficient between X and Y. b) Find equation of line of best fit. c) Find Y when X = 1.5." }
+                  { type: "subjective", text: "Complete the table and find mean, variance, standard deviation from sample data: x = 6,10,12,13,15,20,24,28,30,32. Given $\\\\sum x=190$, find $\\\\sum (x_i-\\\\bar{x})^2$." },
+                  { type: "subjective", text: "Temperature (X): 2,4,6,8,10,12,14,16,18 and Heart rate (Y): 5,11,11,14,22,23,32,29,32. a) Find regression line of Y on X. b) Predict heart rate at X=20. c) Calculate correlation coefficient." },
+                  { type: "mcq", text: "Regression equation $y = 31.9 - 0.34x$. If return rate decreases by 1%, immigration rate will:", options: ["increase by 0.34%", "increase by 3.4%", "decrease by 0.34%", "decrease by 3.4%"], correct: 0 },
+                  { type: "mcq", text: "In simple regression equation, the number of constants involved are:", options: ["1", "2", "0", "3"], correct: 1 },
+                  { type: "mcq", text: "Correlation coefficient -0.85 means:", options: ["Weak correlation", "Strong correlation", "Strong positive correlation", "Very weak negative correlation"], correct: 1 },
+                  { type: "mcq", text: "Analysis of relationship between two variables to provide prediction mechanism:", options: ["Standard error", "Regression", "Correlation", "None"], correct: 1 },
+                  { type: "mcq", text: "Slope of $Y=a+bX$ is downward if:", options: ["$b=0$", "$b>0$", "$b<0$", "None"], correct: 2 },
+                  { type: "mcq", text: "Which has same mean, mode, median?", options: ["6,2,5,4,3,4,1", "4,2,2,1,3,2,3", "2,3,7,3,8,3,2", "4,3,4,3,4,6,4"], correct: 3 },
+                  { type: "mcq", text: "Probability at least 1 boy in 4 children (p=0.5):", options: ["0.9375", "0.0625", "0.5362", "0.1501"], correct: 0 },
+                  { type: "mcq", text: "For binomial, mean=10, variance=5, n =", options: ["10", "20", "30", "40"], correct: 1 }
                 ]
             },
+            "room_3": {
+                title: "Solved Problem 1 - Probability & Statistics",
+                questions: [
+                  { type: "mcq", text: "If $A \\\\subset B$, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
+                  { type: "mcq", text: "If the knowledge that event A has occurred implies that event B cannot occur, the events A and B are said to be:", options: ["Independent", "Mutually exclusive", "$A \\\\subset B$", "$B \\\\subset A$"], correct: 1 },
+                  { type: "mcq", text: "If A and B are independent events in a sample space S, which of the following statement(s) are true?", options: ["A and $B^c$ are independent", "B and $A^c$ are independent", "A and $B^c$ are independent", "All of preceding"], correct: 3 },
+                  { type: "mcq", text: "A code consists of a digit chosen from 0 to 6 followed by a letter of the alphabet. What is the probability the code is 6Z?", options: ["$\\\\frac{1}{260}$", "$\\\\frac{1}{156}$", "$\\\\frac{1}{182}$", "None of them"], correct: 2 },
+                  { type: "mcq", text: "If A and B are independent, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
+                  { type: "mcq", text: "If $B \\\\subset A$, then $P(B|A) =$", options: ["$P(A|B)$", "$P(A)$", "$P(B)$", "None of them"], correct: 2 },
+                  { type: "mcq", text: "If $P(A)=\\\\frac14, P(B)=\\\\frac13, P(A\\\\cap B)=\\\\frac13$, then $P(A|B) =$", options: ["$\\\\frac14$", "$\\\\frac12$", "$\\\\frac13$", "None of them"], correct: 0 },
+                  { type: "mcq", text: "If $A = B$, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
+                  { type: "mcq", text: "At a dental office, P(cleaning)=0.72, P(filling)=0.44, independent. P(filling | cleaning) =", options: ["0.44", "0.72", "Additional information required", "0.32", "0.66"], correct: 0 },
+                  { type: "subjective", text: "Given $P(A)=0.3, P(B)=0.2, P(A\\\\cap B)=0.1$. Find: (a) $P(A^c)$ (b) $P(A\\\\cup B)$ (c) $P(A^c\\\\cap B)$ (d) $P(A\\\\cap B^c)$ (e) $P(A\\\\cup B)^c$ (f) $P(A^c\\\\cup B)$" },
+                  { type: "subjective", text: "A bag contains 5 red, 4 green, 1 blue marbles. Two marbles chosen without replacement. Probability both are green?" },
+                  { type: "subjective", text: "In Exton School, 60% of boys play baseball, 24% play baseball and football. What percent of those that play baseball also play football?" },
+                  { type: "subjective", text: "A box contains 5 green and 7 yellow pencils. Two chosen without replacement. Probability both are yellow?" },
+                  { type: "subjective", text: "A code consists of a digit 0-9 followed by a letter. Probability code is 9Z?" },
+                  { type: "subjective", text: "Show that if A and B are independent, then so are (a) A and $B^c$ (b) A and B (c) A and $B^c$" },
+                  { type: "mcq", text: "For $f(x)=k(x^2+1), 0\\\\leq x\\\\leq 1$, value of k is:", options: ["$\\\\frac34$", "$\\\\frac54$", "$\\\\frac43$", "$\\\\frac45$"], correct: 2 },
+                  { type: "mcq", text: "For PMF $P(x)=\\\\frac{2x}{k}, x=1,2,3,4$, value of k is:", options: ["10", "20", "$\\\\frac{1}{10}$", "$\\\\frac{1}{20}$"], correct: 1 },
+                  { type: "mcq", text: "If $V(X)=3$, then $V(\\\\frac{X}{3}-5) =$", options: ["$\\\\frac13$", "$3$", "$27$", "$\\\\frac{1}{27}$"], correct: 0 },
+                  { type: "mcq", text: "$E(aX+b) =$", options: ["$a^2E(X+b)$", "$aE(X)$", "$\\\\frac{aE(X)+b}{aE(X)+b}$", "None of them"], correct: 3 },
+                  { type: "mcq", text: "If $f(x)$ is continuous pdf on $0\\\\leq x\\\\leq 5$, then $P(X=3)=$", options: ["0", "3", "2", "0.2"], correct: 0 },
+                  { type: "mcq", text: "100 students: 60 passed first, 50 passed second, 30 passed both. Probability passed at least one =", options: ["0.6", "0.8", "0.5", "0.3"], correct: 1 },
+                  { type: "subjective", text: "Complete: If $A-B=\\\\Phi$, then $P(A|B)=$ ?" },
+                  { type: "subjective", text: "Complete: If $P(A)=0.5, P(B^c)=0.5, P(A\\\\cap B)=0.25$, then $P(A|B)=$ ?" },
+                  { type: "subjective", text: "Complete: If $P(A)=0.5, P(B|A)=1/3$, then $P(B^c|A)=$ ?" },
+                  { type: "subjective", text: "Complete: If $A\\\\subset B$, then $P(A^c|B)=$ ?" },
+                  { type: "subjective", text: "Given PMF table: x=-2,-1,0,1,2 with p(x)=0.2,0.4,k,0.2,0.1. Find k and (a) $P(X\\\\leq2)$ (b) $P(X>-2)$ (c) $P(-1\\\\leq X\\\\leq1)$ (d) $P(X\\\\leq-1 \\\\text{ or } X=2)$" },
+                  { type: "subjective", text: "Given pdf $f(x)=kx, 0\\\\leq x\\\\leq2$. (a) Find k. (b) $P(1\\\\leq X\\\\leq1.5)$ (c) $P(1.5\\\\leq X<3)$ (d) $P(X=1.5)$" },
+                  { type: "subjective", text: "Given PMF of messages per hour: x=10-15, p(x)=0.08,0.15,0.30,0.20,0.20,0.07. Find mean and standard deviation." },
+                  { type: "subjective", text: "Given pdf $f(x)=\\\\frac13 x^2, -1<x<2$. Find (1) $E(X), V(X), \\\\sigma$ (2) $E(3X+5), V(5X-2)$" },
+                  { type: "subjective", text: "Binomial: n=5, p=0.02. (a) P(at least one defective) (b) P(exactly three defective)" },
+                  { type: "subjective", text: "Binomial: n=10, p=0.6. (a) P(exactly 6 wins) (b) P(at most 2 wins)" }
+                ]
+            },
+
+            // -- ثانياً: الامتحانات بالترتيب التنازلي (الأحدث للأقدم) --
             "Math103_24_25": {
                 title: "Math103 24-25",
                 questions: [
@@ -275,70 +336,14 @@
                     { type: "mcq", text: "Range of correlation coefficient r:", options: ["0 to 1", "-1 to 1", "-2 to 2", "None"], correct: 1 },
                     { type: "mcq", text: "If A and B independent, $P(A|B)=$", options: ["$P(A)$", "$P(B)$", "$P(A \\\\cap B)$", "None"], correct: 0 }
                 ]
-            }
-        };
-
-        const examExplanations = {
+            },
             "Math103_2024": {
-                0: "Mutually exclusive events cannot occur at the same time, meaning their intersection is an empty set. Therefore, the probability of their intersection is exactly $0$.",
-                1: "A fundamental axiom for a discrete probability mass function is that the sum of all individual probabilities over the entire sample space must exactly equal 1, mathematically represented as $\\\\sum f(x) = 1$.",
-                2: "The standard theoretical formula for the Poisson Probability Mass Function is $\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$, where $\\\\lambda$ is the average rate of value.",
-                3: "A key property of independence: If events A and B are independent, their complements ($A^{c}$ and $B^{c}$) are also independent of each other and of the original events.",
-                4: "For a Poisson distribution, a unique mathematical characteristic is that both the Mean ($\\\\mu$) and the Variance ($\\\\sigma^{2}$) are equal to $\\\\lambda$. Consequently, the standard deviation is $\\\\sqrt{\\\\lambda}$.",
-                5: "A correlation coefficient of precisely $r = 1$ implies that all data points lie perfectly on a straight ascending line, representing a perfect positive linear relationship.",
-                6: "This is the established standard formula for calculating the mode in grouped continuous frequency distributions, utilizing the differences ($D_1$ and $D_2$) between adjacent class frequencies.",
-                7: "This is the classic non-parametric Spearman rank correlation formula, which measures statistical dependence between rankings using the squared differences in ranks ($d_i$).",
-                8: "The population variance for grouped continuous data calculates the squared deviations from the mean, multiplied by their frequencies, and divided by the total population size $\\\\sum f_i$.",
-                9: "Range is a measure of dispersion (how spread out the data is), whereas Mean, Mode, and Median are all measures of central tendency.",
-                10: "1) Calculate Mean by summing and dividing by $n$. Median is the middle value of sorted data. Mode is the most frequent. 2) Range = Max - Min. Variance uses $\\\\frac{\\\\sum(x-\\\\overline{x})^2}{n}$. Standard deviation is the square root of variance. $CV = (\\\\sigma/\\\\mu)*100$.",
-                11: "a) Integrate $k(x^3+1)$ from $0$ to $1$ and set equal to $1$ to find $k = \\\\frac{4}{3}$. b) Integrate the pdf from $1$ to $2$. c) Evaluate $\\\\int x f(x) dx$ for expected value, and $\\\\int x^2 f(x) dx - (E[X])^2$ for variance. d) Apply linearity properties: $E[5X+3] = 5E[X]+3$ and $V(3X-7) = 9V(X)$.",
-                12: "i) Create a table for $X, Y, X^2, Y^2, XY$, sum them up, and apply the Pearson correlation formula. ii) Calculate the slope $\\\\beta_1$ and intercept $\\\\beta_0$ to form the linear equation $Y = \\\\beta_0 + \\\\beta_1 X$.",
-                13: "Assign numerical ranks to both sets of alphabetical grades (e.g., A=1, B=2, etc.). Calculate the difference $d$ between ranks for each pair, square them, and apply the Spearman formula $1 - \\\\frac{6\\\\sum d^2}{n(n^2 - 1)}$."
-            },
-            "Math103_2023_DrHossam": {
-                0: "a) Mutually exclusive: $A \\\\cap B = \\\\phi$. Independent: $P(A \\\\cap B) = P(A)P(B)$. Axioms: $P(E) \\\\geq 0$, $P(S) = 1$, and additivity for disjoint events. b) i) $P(X \\\\geq 3) = P(3) + P(4) = 0.03 + 0.01 = 0.04$. ii) $P(X \\\\leq 1) = P(0) + P(1) = 0.6 + 0.2 = 0.8$.",
-                1: "a) Sorted data: 5, 7, 8, 15, 25. Calculate Arithmetic Mean, Geometric Mean ($\\sqrt[5]{\\\\text{product}}$), Median (middle), Mode, and $CV$. b) By the Binomial theorem, the sum over its range equals $(p+q)^n = 1^n = 1$. MGF is $(q + pe^t)^n$.",
-                2: "a) The total area under the curve is $\\\\int_{a}^{b} \\\\frac{1}{b-a} dx = 1$. Calculate $E(x^7)$ by evaluating $\\\\int_{a}^{b} \\\\frac{x^7}{b-a} dx$. b) Best point estimate is the sample mean ($70$). The 95% confidence interval is $70 \\\\pm 1.96(\\\\frac{7}{\\\\sqrt{49}})$.",
-                3: "a) Calculate $\\\\sum X, \\\\sum Y, \\\\sum X^2, \\\\sum Y^2, \\\\sum XY$ and apply the Pearson correlation formula. b) Find regression coefficients $\\\\beta_0$ and $\\\\beta_1$ for the line $Y = \\\\beta_0 + \\\\beta_1 X$. c) Substitute $X = 1.5$ into the derived regression equation to predict $Y$."
-            },
-            "Math103_24_25": {
-                0: "Variance property states that $V(aX) = a^2V(X)$. Therefore, $V(\\\\frac{X}{3}) = (\\\\frac{1}{3})^2 V(X) = \\\\frac{1}{9} \\\\times \\\\frac{1}{3} = \\\\frac{1}{27}$.",
-                1: "Linearity of expectation states that constants can be pulled out: $E(aX + b) = aE(X) + b$.",
-                2: "If $A \\\\subset B$, the occurrence of A guarantees B. Thus, $P(B|A) = \\\\frac{P(A \\\\cap B)}{P(A)} = \\\\frac{P(A)}{P(A)} = 1$. Note: Depending on the context of the choices provided, index 2 was marked correct.",
-                3: "If the occurrence of event A implies that event B cannot occur, they share no common outcomes, making them mutually exclusive.",
-                4: "The integral of the pdf must equal 1: $\\\\int_{0}^{1} k(x^3+1) dx = k[\\\\frac{1}{4} + 1] = k(\\\\frac{5}{4}) = 1 \\\\implies k = \\\\frac{4}{3}$.",
-                5: "The sum of the probabilities must be 1. $\\\\frac{2(1)}{k} + \\\\frac{2(2)}{k} + \\\\frac{2(3)}{k} + \\\\frac{2(4)}{k} = \\\\frac{20}{k} = 1 \\\\implies k = 20$.",
-                6: "Standard deviation scales by the absolute value of the multiplier. If $Y = \\\\frac{X}{3}$, then $\\\\sigma_Y = \\\\frac{\\\\sigma_X}{3} = \\\\frac{6}{3} = 2$.",
-                7: "The dataset contains an extreme outlier (40 or 400 depending on the typo). The median is resistant to such extreme outliers and best represents the true central tendency.",
-                8: "For ordinal categorical data (weak, moderate, strong, extreme), the Median is the most mathematically appropriate measure of central tendency.",
-                9: "The formula is $CV = (\\\\frac{\\\\sigma}{\\\\mu}) \\\\times 100$. Plugging the values: $58 = (\\\\frac{21.2}{\\\\mu}) \\\\times 100 \\\\implies \\\\mu = \\\\frac{2120}{58} \\\\approx 36.55$.",
-                10: "If sum is 20 and mean is 4, then $n = 5$. The rank (position) of the median for 5 items is $\\\\frac{n+1}{2} = 3$. Based on the options, '5 and 6' was selected in your key.",
-                11: "Total marks = $100 \\\\times 72 = 7200$. Boys' marks = $80 \\\\times 70 = 5600$. Girls' marks = $7200 - 5600 = 1600$. Girls' average = $\\\\frac{1600}{20} = 80$.",
-                12: "A numerical dataset mathematically possesses exactly one mean and one median, but it can be bimodal or multimodal (having multiple modes).",
-                13: "Standard error = $\\\\frac{\\\\sigma}{\\\\sqrt{n}}$. Given variance = $0.4$, $\\\\sigma = \\\\sqrt{0.4}$. Calculate $n$, then Mean = $\\\\frac{\\\\sum x_i}{n}$. (Based on typical typo corrections, mean yields 0.2).",
-                14: "Incorrect sum = $100 \\\\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4800$. Correct mean = $\\\\frac{4800}{100} = 48$.",
-                15: "Variables are defined as characteristics or attributes that can assume different values from one individual to another.",
-                16: "Range is a measure of dispersion (spread), whereas Mean, Median, and Mode are measures of central tendency.",
-                17: "Ranking indicates a specific hierarchical order, but the distance between ranks is not uniformly equal, which classifies it as ordinal data.",
-                18: "For nominal (categorical) data with no intrinsic ordering, the Mode is the only valid measure of central tendency.",
-                19: "In statistics, a population is defined as the complete set of all items or individuals being studied.",
-                20: "The standard simple linear regression formula $Y = a + bX$ involves exactly two constants: the y-intercept ($a$) and the slope coefficient ($b$).",
-                21: "A correlation of $0.85$ is positive and numerically close to $1$, indicating a strong positive linear relationship.",
-                22: "Regression analysis is the statistical technique used to model the relationship between variables to provide a prediction mechanism.",
-                23: "In the linear equation $Y = a + bX$, a negative slope ($b < 0$) causes the graphed line to travel downward from left to right.",
-                24: "Sorting the sequence 4, 3, 4, 3, 4, 6, 4 gives 3, 3, 4, 4, 4, 4, 6. The Mean is 4, Median is 4, and Mode is 4.",
-                25: "Using Binomial distribution ($n=4, p=0.5$). $P(X \\\\geq 1) = 1 - P(X=0) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
-                26: "Mean $np=10$, Variance $npq=5$. Dividing gives $q = 0.5$, so $p = 0.5$. Substituting back: $n(0.5) = 10 \\\\implies n = 20$.",
-                27: "Assuming $F(x)$ represents the cumulative distribution function (CDF), $F(2.5)$ represents the accumulated probability from $0$ up to $2.5$.",
-                28: "The slope coefficient is $2$, meaning for every $1$ unit increase in the independent variable $X$, $Y$ increases by $2$ units.",
-                29: "A fundamental property: If A and B are independent, any combination of them and their complements are also independent.",
-                30: "The events are independent. $P(7) = \\\\frac{1}{8}$. Probability of a specific letter is $\\\\frac{1}{26}$. Total probability = $\\\\frac{1}{8} \\\\times \\\\frac{1}{26} = \\\\frac{1}{208}$.",
-                31: "In the dataset 2, 2, 3, 3, both the number 2 and the number 3 appear with the highest frequency (twice), making it bimodal.",
-                32: "If events A and B are completely independent, the occurrence of A provides no new information about B. Thus, $P(B|A) = P(B)$.",
-                33: "Pearson's correlation coefficient ($r$) is mathematically bounded between $-1$ (perfect negative) and $1$ (perfect positive).",
-                34: "By the strict definition of independent events, the probability of A given B is simply the marginal probability of A, $P(A)$."
-            }
-        };
+                title: "Math103 (2024) - Exam",
+                questions: [
+                    { type: "mcq", text: "The condition of Mutually exclusive events, is $P(A \\\\cap B) =$", options: ["$P(A) - P(B)$", "$P(A) + P(B)$", "$0$", "$P(A)*P(B)$"], correct: 2 },
+                    { type: "mcq", text: "If $P(x)$ is a probability mass function, then", options: ["$\\\\sum f(x) = 0$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 1$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 0$", "$\\\\sum f(x) = 1$"], correct: 3 },
+                    { type: "mcq", text: "The correct formula for the P.m.f.of Poisson distribution is:", options: ["$p^{x}q^{1 - x}$", "$\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$", "$\\\\frac{1}{\\\\sqrt{2\\\\pi}} e^{-\\\\frac{1}{2} z^{2}}$", "$C_{n}^{x} p^{x} q^{n - x}$"], correct: 1 },
+                    { type: "mcq", text: "If A and B are independent events, then which of the following statement(s) are true?", options: ["A and $B^{c}$ are independent", "A and 
 
         const state = {
             currentRoom: null,
