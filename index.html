@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Math103 Exam Portal</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { body: '#020617', panel: '#0f172a', border: '#1e293b' },
+                        light: { body: '#f1f5f9', panel: '#ffffff', border: '#e2e8f0' }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        arabic: ['Cairo', 'sans-serif'],
+                        code: ['"Fira Code"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            },
+            startup: {
+                typeset: false // Manual typesetting via JS after dynamic render
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        :root {
+            --bg-body: #020617;
+            --bg-panel: rgba(15, 23, 42, 0.7);
+            --border-color: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-emerald: #34d399;
+            --accent-indigo: #6366f1;
+            --glass-blur: 16px;
+            --nav-active-bg: rgba(99, 102, 241, 0.2);
+            --nav-active-text: #818cf8;
+            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.15);
+        }
+
+        body.light-theme {
+            --bg-body: #f1f5f9;
+            --bg-panel: rgba(255, 255, 255, 0.85);
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-indigo: #4338ca;
+            --nav-active-bg: #ede9fe;
+            --nav-active-text: #4338ca;
+            --shadow-glow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
+        }
+
+        /* Nav Tabs */
+        .room-tab {
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .room-tab.active {
+            background: var(--nav-active-bg);
+            color: var(--nav-active-text);
+            border-color: var(--accent-indigo);
+            font-weight: 600;
+        }
+
+        /* Premium MathJax Chips */
+        mjx-container.MathJax {
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(52,211,153,0.12));
+            padding: 0.15em 0.4em;
+            border-radius: 6px;
+            border: 1px solid rgba(99,102,241,0.2);
+        }
+        mjx-container.MathJax[display="true"] {
+            padding: 1em;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(52,211,153,0.06));
+            border: 1px solid var(--border-color);
+            margin: 1rem 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        body.light-theme mjx-container.MathJax {
+            background: linear-gradient(135deg, rgba(67, 56, 202, 0.08), rgba(16, 185, 129, 0.08));
+            border-color: rgba(67, 56, 202, 0.15);
+        }
+
+        /* Interactive Options */
+        .option-wrapper {
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .option-wrapper:hover {
+            border-color: var(--accent-indigo);
+            transform: translateY(-1px);
+        }
+        .option-wrapper input:checked + div {
+            color: var(--accent-indigo);
+            font-weight: 600;
+        }
+        
+        /* Submission States */
+        .badge-pass {
+            border-color: var(--accent-emerald) !important;
+            background: rgba(52, 211, 153, 0.1) !important;
+        }
+        .badge-fail {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen relative flex flex-col">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-l-0 border-r-0 border-t-0 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">Math103 Portal</h1>
+                <p class="text-xs text-[var(--text-muted)]">Probability & Statistics</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="hidden sm:flex flex-col items-end">
+                <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Global Score</span>
+                <span id="global-score" class="text-2xl font-bold gradient-text">0%</span>
+            </div>
+            <button id="theme-toggle" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+                🌙 Dark
+            </button>
+        </div>
+    </header>
+
+    <div class="px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
+        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth">
+            </div>
+    </div>
+
+    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-32">
+        <div id="room-banner" class="hidden glass-panel rounded-2xl p-6 mb-8 text-center fade-in">
+            </div>
+
+        <form id="exam-form" class="space-y-6">
+            </form>
+
+        <div id="submit-container" class="hidden mt-10 flex justify-end">
+            <button type="button" id="submit-exam-btn" class="px-8 py-4 rounded-xl text-white font-bold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all transform hover:-translate-y-1" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
+                Evaluate Submission
+            </button>
+        </div>
+    </main>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
+        <button id="nav-prev" class="text-[var(--text-muted)] hover:text-[var(--accent-indigo)] transition-colors p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        
+        <div class="flex-grow mx-6 flex flex-col items-center">
+            <span id="nav-counter" class="text-sm font-bold tracking-wide mb-1">Question 0 / 0</span>
+            <div class="w-full bg-[var(--bg-body)] h-2 rounded-full overflow-hidden border border-[var(--border-color)]">
+                <div id="nav-progress" class="h-full rounded-full transition-all duration-500 ease-out" style="width: 0%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-emerald));"></div>
+            </div>
+        </div>
+
+        <button id="nav-next" class="text-[var(--text-muted)] hover:text-[var(--accent-emerald)] transition-colors p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
+
+    <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div class="text-sm font-semibold text-[var(--text-muted)] tracking-wide">
+            Minia University - Faculty of Science
+        </div>
+        <div class="text-sm font-bold tracking-widest gradient-text">
+            ENG: AHMED ABO ANWER <span class="text-[var(--text-muted)] mx-2">|</span> ENG: HAMZA KAFAFI
+        </div>
+    </footer>
+
+    <script>
+        // =====================================================================
+        // [المكان الفاضي الأول: داتا الأسئلة]
+        // انسخ الكود الخاص بالأسئلة الذي سأرسله لك في "الجزء الثاني" والصقه هنا
+        // =====================================================================
+        const examQuestions = {
+    "room_2025": {
+        title: "Exam 2024/2025",
+        questions: [
+            {
+                type: "mcq",
+                text: "If the variance of $x$ is $v(x)=\\frac{1}{3}$, then $v(\\frac{x}{3}-5)=$",
+                options: ["$\\frac{1}{3}$", "3", "27", "$\\frac{1}{27}$"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "The Expected value $E(ax-b)=$ is equivalent to:",
+                options: ["$av(x)-b$", "$aE(x)$", "$aE(x)-b$", "None of them"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "If the knowledge that an event A has occurred implies that a second event B cannot occur, the events A and B are said to be:",
+                options: ["Independent", "Mutually exclusive", "$A \\subset B$", "$B \\subset A$"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "The value of k when the probability mass function is given by $p(x)=\\begin{cases}\\frac{2x}{k}, & x=1,2,3,4\\\\ 0, & o.w\\end{cases}$ is:",
+                options: ["10", "20", "$\\frac{1}{10}$", "$\\frac{1}{20}$"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "If the standard deviation of a set of observations is 6 and if each observation is divided by 3, the standard deviation of the new set of observations will be:",
+                options: ["2", "4", "3", "1"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "Which measure would best depict the following data: 10, 20, 20, 30, 35, 40 and 400?",
+                options: ["Mean", "Variance", "Range", "Median"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "The coefficient of variation of a series is 58%. If their standard deviation is 21.2, then their mean is:",
+                options: ["36.6", "34.8", "24.4", "None of these"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "In a class of 100 students there are 80 boys whose average marks in a subject are 70. If the average marks of the complete class is 72, then what is the average of the girls?",
+                options: ["80", "71.5", "68", "67.5"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "If $\\Sigma x_i = 30$, and the standard error and variance are 0.3 and 9 respectively, then the value of mean is:",
+                options: ["0.2", "0.9", "0.3", "0.4"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "Mean of 100 items is 49. It was discovered that three items which should have been 40, 20, 50 were wrongly read as 60, 70, 80 respectively. The correct mean is:",
+                options: ["50", "48", "82.5", "80"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "What is the probability that in a family of 4 children there will be at least 1 boy? (Assume that the probability of a male birth is 0.5)",
+                options: ["0.9375", "0.0625", "0.5362", "0.1501"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "What is 'n' for the binomial distribution for which mean is 10 and variance is 5?",
+                options: ["10", "20", "30", "40"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "A code consists of a digit chosen from 0 to 7 followed by a letter of the alphabet. What is the probability the code is 7Z?",
+                options: ["$\\frac{1}{200}$", "$\\frac{1}{156}$", "$\\frac{1}{182}$", "$\\frac{1}{208}$"],
+                correct: 3
+            }
+        ]
+    },
+    "room_2024": {
+        title: "Exam 2023/2024",
+        questions: [
+            {
+                type: "mcq",
+                text: "The condition of Mutually exclusive events, is $P(A \\cap B)=$",
+                options: ["$P(A)-P(B)$", "$P(A)+P(B)$", "0", "$P(A)*P(B)$"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "If $P(x)$ is a probability mass function, then:",
+                options: ["$\\Sigma f(x)=0$", "$\\int_{-\\infty}^{\\infty} f(x) = 1$", "$\\int_{-\\infty}^{\\infty} f(x) = 0$", "$\\Sigma f(x)=1$"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "The correct formula for the P.m.f. of Poisson distribution is:",
+                options: ["$p^xq^{1-x}$", "$\\frac{e^{-\\lambda}\\lambda^x}{x!}$", "$\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{1}{2}z^2}$", "$C_x^n p^x q^{n-x}$"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "If A and B are independent events, then which of the following statement(s) are true?",
+                options: ["A and $B^c$ are independent.", "$A^c$ and B are independent.", "$A^c$ and $B^c$ are independent.", "All of preceding."],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "If X flows the Poisson distribution, then the characteristics values are:",
+                options: ["$np, \\sqrt{npq}$", "$\\mu, \\sigma^2, \\sigma$", "$x, \\mu, \\sigma$", "$\\lambda, \\sqrt{\\lambda}$"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "If the correlation coefficient $r=1$, indicates:",
+                options: ["No linear relationship.", "A perfect positive linear relationship.", "A negative linear relationship.", "None of them."],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "The formula for calculating the mode in continuous data given as:",
+                options: ["$\\frac{\\Sigma x_i}{n}$", "$L+(\\frac{D_1}{D_1+D_2})*h$", "$1-\\frac{6\\Sigma d_i^2}{n(n^2-1)}$", "None of them"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "The Spearman rank correlation coefficient take the formula:",
+                options: ["$\\frac{\\Sigma (x_i-\\bar{x})(y_i-\\bar{y})}{N S_x S_y}$", "$\\frac{\\Sigma x_i y_i - N \\bar{x}\\bar{y}}{\\Sigma x_i^2 - N \\bar{x}^2}$", "$1-\\frac{6\\Sigma d_i^2}{n(n^2-1)}$", "None of them"],
+                correct: 2
+            },
+            {
+                type: "subjective",
+                text: "A continuous random variable X has the probability function: $$f(x)=\\begin{cases}K x & 0 \\le x \\le 2 \\\\ 0 & o.w. \\end{cases}$$ Find the constant $K$, $E[X]$, and $V(X)$.",
+                idealSolution: ""
+            }
+        ]
+    },
+    "room_2023": {
+        title: "Exam 2022/2023",
+        questions: [
+            {
+                type: "subjective",
+                text: "Define: Mutually exclusive events; Independent events; Probability Axioms.",
+                idealSolution: ""
+            },
+            {
+                type: "subjective",
+                text: "A sample of four electronic components is taken from the output of a production line. The probabilities of the various outcomes are calculated to be: $Pr[0 \\text{ defectives}] = 0.6$, $Pr[1 \\text{ defective}] = 0.2$, $Pr[2 \\text{ defectives}] = 0.04$, $Pr[3 \\text{ defectives}] = 0.03$, $Pr[4 \\text{ defectives}] = 0.01$. What is the probability of at least three defective? What is the probability of at most one defective?",
+                idealSolution: ""
+            },
+            {
+                type: "subjective",
+                text: "Find G.M; A.M; median; mode and C.V for the following set: 25, 8, 15, 5, 7.",
+                idealSolution: ""
+            },
+            {
+                type: "subjective",
+                text: "Prove that $f(x)=C_x^n p^x q^{n-x}$ ; $x=0,1,2,...,n$ is a mass function. Find the moment generating function and $\\sigma^2$.",
+                idealSolution: ""
+            },
+            {
+                type: "subjective",
+                text: "Prove that $f(x)=\\frac{1}{b-a}$ for $a<x<b$ is density function and find $E(x)$.",
+                idealSolution: ""
+            }
+        ]
+    },
+    "room_assignments": {
+        title: "IT Assignments",
+        questions: [
+            {
+                type: "mcq",
+                text: "Ranking students from the individual with the highest-grade points average (GPA) to the lowest is an example of:",
+                options: ["Categorical ordinal", "Ratio", "Categorical nominal", "Interval"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "Number of patients admitted to a hospital each day is:",
+                options: ["Qualitative and nominal", "Qualitative and ordinal", "Quantitative and discrete", "Quantitative and continuous"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "Temperatures recorded every half hour at a weather bureau is an example of:",
+                options: ["Discrete Data", "Continuous Data", "Nominal Data", "Ordinal Data"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "If $\\Sigma x_i^2=1530$, $n=10$ (population), and $\\bar{x}=12$, then the coefficient of variation is:",
+                options: ["36%", "41%", "25%", "none of these"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "The Correlation Coefficient between the two variables was found to be -0.85, this means:",
+                options: ["There is a weak correlation.", "There is a strong positive correlation.", "There is a strong negative correlation.", "There is a very weak negative correlation."],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "Which of the following has the same mean, mode, and median?",
+                options: ["6, 2, 5, 4, 3, 4, 1", "4, 2, 2, 1, 3, 2, 3", "2, 3, 7, 3, 8, 3, 2", "4, 3, 4, 3, 4, 6, 4"],
+                correct: 3
+            },
+            {
+                type: "mcq",
+                text: "The straight-line graph of the linear equation $Y=a+bX$, slope will be downward if:",
+                options: ["$b=0$", "$b>0$", "$b<0$", "None of the above"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "In simple regression equation, the numbers of constant involved are:",
+                options: ["1", "2", "3", "0"],
+                correct: 1
+            }
+        ]
+    },
+    "room_solved": {
+        title: "Solved Problems",
+        questions: [
+            {
+                type: "mcq",
+                text: "If $P(A)=0.3$, $P(B)=0.2$ and $P(A \\cap B)=0.1$, Determine $P(A \\cup B)$.",
+                options: ["0.4", "0.6", "0.1", "0.8"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "If $P(A)=0.3$, $P(B)=0.2$ and $P(A \\cap B)=0.1$, Determine $P(A^c \\cup B)$.",
+                options: ["0.4", "0.7", "0.8", "0.9"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "At a dental office, the probability of a patient needs a cleaning is 0.72. The probability of a patient needs a filling is 0.44. Assuming the events are independent, what is the probability a patient needs a filling given that he/she needs a cleaning?",
+                options: ["0.44", "0.72", "0.32", "0.66"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "The bag contains 5 red marbles, 4 green marbles and 1 blue marble. Two marbles are chosen at random without replacement. What is the probability both marbles are green?",
+                options: ["$\\frac{16}{100}$", "$\\frac{2}{15}$", "$\\frac{12}{90}$", "$\\frac{4}{9}$"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "A code consists of a digit chosen from 0 to 9 followed by a letter of the alphabet. What is the probability the code is 9Z?",
+                options: ["$\\frac{1}{260}$", "$\\frac{1}{156}$", "$\\frac{1}{182}$", "None of them"],
+                correct: 0
+            },
+            {
+                type: "mcq",
+                text: "If the following function is probability density function (continuous), $f(x)=kx^2$ for $0 \\le x < 3$. find the value of k.",
+                options: ["$\\frac{1}{3}$", "$\\frac{1}{9}$", "$\\frac{1}{27}$", "1"],
+                correct: 1
+            },
+            {
+                type: "mcq",
+                text: "If the pdf of a r.v. is given as $f(x)=kx$ for $0 \\le x \\le 2$. Find $P(1 \\le X \\le 1.5)$.",
+                options: ["0.5", "0.25", "0.3125", "0.75"],
+                correct: 2
+            },
+            {
+                type: "mcq",
+                text: "If a random sample of five units of a specific product is drawn. The probability of a defective sample appearing was 2%. What is the probability of obtaining one or more defective units in the sample?",
+                options: ["0.904", "0.096", "0.02", "0.98"],
+                correct: 1
+            }
+        ]
+    }
+};
+
+        // =====================================================================
+        // [المكان الفاضي الثاني: داتا الإجابات التفصيلية]
+        // انسخ الكود الخاص بالتفسيرات الذي سأرسله لك في "الجزء الثالث" والصقه هنا
+        // =====================================================================
+        const examExplanations = {
+    "room_2025": {
+        0: "Variance property states that $Var(aX+b) = a^2Var(X)$. Here $a = \\frac{1}{3}$, so $Var(\\frac{X}{3} - 5) = (\\frac{1}{3})^2 \\times \\frac{1}{3} = \\frac{1}{9} \\times \\frac{1}{3} = \\frac{1}{27}$.",
+        1: "Linearity of Expectation states that $E(aX \\pm b) = aE(X) \\pm b$. Therefore, $E(aX - b) = aE(X) - b$.",
+        2: "Mutually exclusive events cannot happen at the same time; if one occurs, the probability of the other occurring is strictly zero ($P(A \\cap B) = 0$).",
+        3: "The sum of all probabilities in a mass function must equal 1. $\\Sigma p(x) = \\frac{2(1)}{k} + \\frac{2(2)}{k} + \\frac{2(3)}{k} + \\frac{2(4)}{k} = \\frac{2+4+6+8}{k} = \\frac{20}{k} = 1 \\implies k = 20$.",
+        4: "Standard deviation scales by the absolute value of the multiplier, unaffected by shifting. If $Y = \\frac{X}{3}$, then $\\sigma_Y = \\frac{\\sigma_X}{3} = \\frac{6}{3} = 2$.",
+        5: "The data contains an extreme outlier (400). The median is resistant to such extreme outliers and best represents the true central tendency of this dataset.",
+        6: "The Coefficient of Variation formula is $CV = (\\frac{\\sigma}{\\mu}) \\times 100$. Plugging the values: $58 = (\\frac{21.2}{\\mu}) \\times 100 \\implies \\mu = \\frac{2120}{58} \\approx 36.55$ (closest to 36.6).",
+        7: "Total marks of the class = $100 \\times 72 = 7200$. Total marks of boys = $80 \\times 70 = 5600$. Total marks of girls = $7200 - 5600 = 1600$. Average of girls = $\\frac{1600}{20} = 80$.",
+        8: "Standard error = $\\frac{\\sigma}{\\sqrt{n}} = 0.3$. Variance = 9, so $\\sigma = 3$. Therefore, $\\frac{3}{\\sqrt{n}} = 0.3 \\implies \\sqrt{n} = 10 \\implies n=100$. The Mean $\\mu = \\frac{\\Sigma x}{n} = \\frac{30}{100} = 0.3$.",
+        9: "The incorrect sum = $100 \\times 49 = 4900$. To correct it, subtract the wrong items and add the correct ones: Correct sum = $4900 - (60+70+80) + (40+20+50) = 4900 - 210 + 110 = 4800$. Correct mean = $\\frac{4800}{100} = 48$.",
+        10: "Using Binomial distribution ($n=4, p=0.5$). $P(X \\ge 1) = 1 - P(X=0) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
+        11: "For a binomial distribution, Mean = $np = 10$, and Variance = $npq = 5$. Dividing variance by mean: $q = \\frac{5}{10} = 0.5$. Since $p+q=1$, $p=0.5$. Substituting back: $n(0.5) = 10 \\implies n = 20$.",
+        12: "The choice of digit and letter are independent events. Choice of digit (0-7 means 8 options): $P(7) = \\frac{1}{8}$. Choice of letter: $P(Z) = \\frac{1}{26}$. Total probability = $\\frac{1}{8} \\times \\frac{1}{26} = \\frac{1}{208}$."
+    },
+    "room_2024": {
+        0: "Mutually exclusive events share no common outcomes, meaning their intersection is an empty set, making the probability of their intersection exactly 0.",
+        1: "One of the fundamental axioms of a Probability Mass Function (discrete distribution) is that the sum of all individual probabilities over the entire sample space must exactly equal 1.",
+        2: "This is the standard theoretical definition of the Poisson Probability Mass Function, where $\\lambda$ represents the average number of events in the given time interval.",
+        3: "A key property of independence: If events A and B are independent, their complements ($A^c$ and $B^c$) are also independent of each other and of the original events.",
+        4: "For a Poisson distribution, a unique characteristic is that both the Mean ($\\mu$) and the Variance ($\\sigma^2$) are equal to $\\lambda$. Consequently, the standard deviation is $\\sqrt{\\lambda}$.",
+        5: "A correlation coefficient of precisely 1 implies that all data points lie perfectly on a straight ascending line, representing a perfect positive linear relationship.",
+        6: "This is the established standard formula for calculating the mode in grouped continuous frequency distributions, utilizing differences between adjacent class frequencies.",
+        7: "This is the classic non-parametric Spearman rank correlation formula, which measures statistical dependence between rankings using the squared differences in ranks ($d_i$).",
+        8: "1) Find K using the property $\\int f(x)dx = 1$: $\\int_{0}^{2} Kx dx = K[\\frac{x^2}{2}]_{0}^{2} = 2K = 1 \\implies K = 0.5$.\n\n2) Expected Value $E(X) = \\int x f(x) dx = \\int_{0}^{2} 0.5x^2 dx = 0.5[\\frac{x^3}{3}]_{0}^{2} = \\frac{4}{3}$.\n\n3) Variance $V(X) = E(X^2) - (E(X))^2$. First, $E(X^2) = \\int_{0}^{2} 0.5x^3 dx = 0.5[\\frac{x^4}{4}]_{0}^{2} = 2$. Then, $V(X) = 2 - (\\frac{4}{3})^2 = 2 - \\frac{16}{9} = \\frac{2}{9}$."
+    },
+    "room_2023": {
+        0: "1. Mutually Exclusive Events: Events that cannot occur simultaneously; their intersection is an empty set ($A \\cap B = \\phi$).\n2. Independent Events: The occurrence of one event does not affect the probability of the occurrence of the other ($P(A \\cap B) = P(A)P(B)$).\n3. Probability Axioms (Kolmogorov's): \n   a) Non-negativity: $P(A) \\ge 0$\n   b) Normalization: $P(S) = 1$\n   c) Additivity: For mutually exclusive events $E_1, E_2...$, $P(E_1 \\cup E_2 \\dots) = P(E_1) + P(E_2) + \\dots$",
+        1: "i) Probability of at least three defective = $Pr[3] + Pr[4] = 0.03 + 0.01 = 0.04$.\n\nii) Probability of at most one defective = $Pr[0] + Pr[1] = 0.6 + 0.2 = 0.8$.",
+        2: "Data sorted: 5, 7, 8, 15, 25.\n\n1. A.M (Mean) = $\\frac{5+7+8+15+25}{5} = \\frac{60}{5} = 12$.\n2. Median = middle value = 8.\n3. Mode = No mode (all values appear only once).\n4. G.M = $\\sqrt[5]{5 \\times 7 \\times 8 \\times 15 \\times 25} \\approx 10.09$.\n5. C.V = $(\\frac{S}{A.M}) \\times 100$. First, find sample variance $S^2 = \\frac{\\Sigma(x-\\bar{x})^2}{n-1} = \\frac{(-7)^2 + (-5)^2 + (-4)^2 + 3^2 + 13^2}{4} = \\frac{268}{4} = 67$. $S = \\sqrt{67} \\approx 8.185$. $C.V = (\\frac{8.185}{12}) \\times 100 \\approx 68.2\\%$.",
+        3: "1. To prove it's a pmf, the sum over its range must equal 1: $\\Sigma_{x=0}^{n} C_x^n p^x q^{n-x} = (p+q)^n$ (by Binomial theorem). Since probabilities $p+q=1$, $1^n = 1$.\n\n2. Moment Generating Function $M_X(t) = E(e^{tx}) = \\Sigma_{x=0}^{n} e^{tx} C_x^n p^x q^{n-x} = \\Sigma_{x=0}^{n} C_x^n (pe^t)^x q^{n-x} = (pe^t + q)^n$.\n\n3. Variance $\\sigma^2$ for a binomial distribution is mathematically derived as $npq$.",
+        4: "1. Proof of density function: The total area under the curve must be 1. $\\int_{a}^{b} \\frac{1}{b-a} dx = \\frac{1}{b-a} [x]_{a}^{b} = \\frac{b-a}{b-a} = 1$.\n\n2. Expected value $E(X) = \\int_{a}^{b} x f(x) dx = \\int_{a}^{b} \\frac{x}{b-a} dx = \\frac{1}{b-a} [\\frac{x^2}{2}]_{a}^{b} = \\frac{b^2-a^2}{2(b-a)}$. Using difference of squares $(b^2-a^2) = (b-a)(b+a)$, this simplifies to $\\frac{b+a}{2}$."
+    },
+    "room_assignments": {
+        0: "Ranks indicate a specific hierarchical order (1st, 2nd, 3rd) but the distance or interval between these ranks is not quantified or uniformly equal, classifying it as ordinal categorical data.",
+        1: "Patients represent countable, distinct entities. You can admit 1, 2, or 3 patients, but not a fraction of a patient, making the data numerical (quantitative) and discrete.",
+        2: "Temperature can be measured to any degree of precision (e.g., 18.5, 18.55 degrees) and can take any real number value within a given range, making it a continuous variable.",
+        3: "First calculate the variance: $\\sigma^2 = \\frac{\\Sigma x^2}{n} - \\mu^2 = \\frac{1530}{10} - 12^2 = 153 - 144 = 9$. Thus, standard deviation $\\sigma = 3$. The Coefficient of Variation $CV = (\\frac{3}{12}) \\times 100 = 25\\%$.",
+        4: "The sign (-) indicates the direction (negative/inverse relationship), and the magnitude (0.85) is very close to 1, indicating the relationship is numerically strong.",
+        5: "Let's analyze option (d): 4, 3, 4, 3, 4, 6, 4. Sum = 28, $n = 7$. Mean = $\\frac{28}{7} = 4$. Sorted: 3, 3, 4, 4, 4, 4, 6. The middle value (Median) is 4. The most frequent value (Mode) is 4. They are all identical.",
+        6: "In the linear equation $Y = a + bX$, 'b' represents the slope coefficient. A negative slope ($b < 0$) causes the graphed line to travel downward from left to right.",
+        7: "The standard simple linear regression formula is $Y = \\beta_0 + \\beta_1 X$, involving exactly two constants: the y-intercept ($\\beta_0$) and the slope coefficient ($\\beta_1$)."
+    },
+    "room_solved": {
+        0: "Applying the general addition rule of probability: $P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = 0.3 + 0.2 - 0.1 = 0.4$.",
+        1: "Using set theory and probability rules: $P(A^c \\cup B) = P(A^c) + P(B) - P(A^c \\cap B)$.\n$P(A^c) = 1 - 0.3 = 0.7$.\n$P(A^c \\cap B) = P(B) - P(A \\cap B) = 0.2 - 0.1 = 0.1$.\nSubstituting back: $0.7 + 0.2 - 0.1 = 0.8$.",
+        2: "By the fundamental definition of independent events, the occurrence of event A does not alter the probability of event B. Therefore, $P(B|A) = P(B) = 0.44$.",
+        3: "Probability of first green = $\\frac{4}{10}$. Since there is no replacement, the bag now holds 9 marbles, 3 of which are green. Probability of second green = $\\frac{3}{9}$. Total probability = $\\frac{4}{10} \\times \\frac{3}{9} = \\frac{12}{90} = \\frac{2}{15}$.",
+        4: "The choice of digit and choice of letter are fully independent. $P(9) = \\frac{1}{10}$, and $P(Z) = \\frac{1}{26}$. Total probability = $\\frac{1}{10} \\times \\frac{1}{26} = \\frac{1}{260}$.",
+        5: "The total integral of a valid pdf must equal 1. $\\int_{0}^{3} kx^2 dx = k[\\frac{x^3}{3}]_0^3 = k(\\frac{27}{3}) = 9k$. Setting $9k = 1 \\implies k = \\frac{1}{9}$.",
+        6: "First, find k: $\\int_{0}^{2} kx dx = k[\\frac{x^2}{2}]_0^2 = 2k = 1 \\implies k = 0.5$. \nNow, find the probability over the specific interval: $\\int_{1}^{1.5} 0.5x dx = 0.5[\\frac{x^2}{2}]_1^{1.5} = 0.25((1.5)^2 - 1^2) = 0.25(2.25 - 1) = 0.25(1.25) = 0.3125$.",
+        7: "Using the Binomial distribution ($n=5, p=0.02$). The probability of obtaining at least one defective is the complement of obtaining zero defectives: $P(X \\ge 1) = 1 - P(X=0) = 1 - \\binom{5}{0}(0.02)^0(0.98)^5 \\approx 1 - 0.9039 = 0.096$."
+    }
+};
+
+
+        // =====================================================================
+        // APP LOGIC (لا تقم بتعديل هذا الجزء)
+        // =====================================================================
+        const state = {
+            currentRoom: null,
+            answers: {},      // roomId -> { qIndex: selectedValue/string }
+            evaluated: {},    // roomId -> boolean
+            globalScore: { totalAttempted: 0, totalCorrect: 0 }
+        };
+
+        // DOM Elements
+        const navContainer = document.getElementById('navbar-rooms-container');
+        const formContainer = document.getElementById('exam-form');
+        const roomBanner = document.getElementById('room-banner');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-exam-btn');
+        const themeBtn = document.getElementById('theme-toggle');
+        const globalScoreEl = document.getElementById('global-score');
+        const navPrev = document.getElementById('nav-prev');
+        const navNext = document.getElementById('nav-next');
+        const navCounter = document.getElementById('nav-counter');
+        const navProgress = document.getElementById('nav-progress');
+
+        // Theme Initialization
+        let isLight = false;
+        themeBtn.addEventListener('click', () => {
+            isLight = !isLight;
+            document.body.classList.toggle('light-theme', isLight);
+            themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
+        });
+
+        // Initialize App
+        function initApp() {
+            Object.keys(examQuestions).forEach((roomId, index) => {
+                state.answers[roomId] = {};
+                state.evaluated[roomId] = false;
+                
+                const btn = document.createElement('button');
+                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${index === 0 ? 'active' : ''}`;
+                btn.innerText = examQuestions[roomId].title;
+                btn.onclick = () => loadRoom(roomId, btn);
+                navContainer.appendChild(btn);
+                
+                if (index === 0) loadRoom(roomId, btn);
+            });
+        }
+
+        // Load a specific room
+        function loadRoom(roomId, btnElement) {
+            state.currentRoom = roomId;
+            
+            document.querySelectorAll('.room-tab').forEach(b => b.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+            
+            formContainer.innerHTML = '';
+            formContainer.classList.remove('fade-in');
+            void formContainer.offsetWidth; // Trigger reflow
+            formContainer.classList.add('fade-in');
+            
+            const isEvaluated = state.evaluated[roomId];
+            const questions = examQuestions[roomId].questions;
+
+            if(questions.length === 0) {
+                formContainer.innerHTML = `<div class="text-center py-10 text-[var(--text-muted)] font-bold">يرجى إضافة داتا الأسئلة في المكان المخصص لظهور المحتوى.</div>`;
+                updateSubmitUI();
+                return;
+            }
+            
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.id = `qcard-${index}`;
+                card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden question-card';
+                
+                // Question Header
+                const header = document.createElement('div');
+                header.className = 'flex items-center gap-3 mb-4';
+                header.innerHTML = `
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-sm">
+                        ${index + 1}
+                    </span>
+                    <h3 class="text-lg font-medium leading-relaxed flex-grow text-wrap">${q.text}</h3>
+                `;
+                card.appendChild(header);
+
+                // Inputs (MCQ or TF)
+                if (q.type === 'mcq' || q.type === 'tf') {
+                    const gridClass = q.type === 'tf' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2';
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.className = `grid ${gridClass} gap-3 mt-4`;
+                    
+                    q.options.forEach((opt, optIndex) => {
+                        const isChecked = state.answers[roomId][index] === optIndex;
+                        const wrapper = document.createElement('label');
+                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative ${isEvaluated && isChecked ? 'ring-2 ring-indigo-500' : ''}`;
+                        
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `q-${roomId}-${index}`;
+                        input.value = optIndex;
+                        input.className = 'hidden';
+                        input.checked = isChecked;
+                        input.disabled = isEvaluated;
+                        
+                        input.addEventListener('change', () => {
+                            state.answers[roomId][index] = optIndex;
+                            updateProgress();
+                        });
+
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
+                        textDiv.innerHTML = opt;
+                        
+                        // Validation logic for evaluated state
+                        if (isEvaluated) {
+                            if (optIndex === q.correct) {
+                                wrapper.classList.add('badge-pass');
+                            } else if (isChecked && optIndex !== q.correct) {
+                                wrapper.classList.add('badge-fail');
+                            }
+                        }
+
+                        wrapper.appendChild(input);
+                        wrapper.appendChild(textDiv);
+                        optionsContainer.appendChild(wrapper);
+                    });
+                    card.appendChild(optionsContainer);
+                    
+                } else if (q.type === 'subjective') {
+                    const textArea = document.createElement('textarea');
+                    textArea.className = 'w-full h-32 p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-indigo)] transition-colors resize-none';
+                    textArea.placeholder = "Formulate your mathematical proof or logic here...";
+                    textArea.value = state.answers[roomId][index] || '';
+                    textArea.disabled = isEvaluated;
+                    
+                    textArea.addEventListener('input', (e) => {
+                        state.answers[roomId][index] = e.target.value;
+                        updateProgress();
+                    });
+                    card.appendChild(textArea);
+                }
+
+                // Explanation Box (Hidden unless evaluated)
+                if (isEvaluated) {
+                    const expBox = document.createElement('div');
+                    // Fetch explanation dynamically from the second object
+                    const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح / مفتاح حل لهذا السؤال في قاعدة البيانات.";
+                    
+                    if (q.type === 'mcq' || q.type === 'tf') {
+                        expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
+                        expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${explanationText}`;
+                    } else if (q.type === 'subjective') {
+                        expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
+                        expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${explanationText}</span>`;
+                    }
+                    card.appendChild(expBox);
+                }
+
+                formContainer.appendChild(card);
+            });
+
+            MathJax.typesetPromise([formContainer]);
+            updateSubmitUI();
+            updateProgress();
+            setupIntersectionObserver();
+        }
+
+        // Evaluate Exam
+        submitBtn.addEventListener('click', () => {
+            const roomId = state.currentRoom;
+            if (state.evaluated[roomId]) return;
+            
+            const questions = examQuestions[roomId].questions;
+            let correct = 0;
+            let totalObjective = 0;
+
+            questions.forEach((q, index) => {
+                if (q.type === 'mcq' || q.type === 'tf') {
+                    totalObjective++;
+                    if (state.answers[roomId][index] === q.correct) {
+                        correct++;
+                        state.globalScore.totalCorrect++;
+                    }
+                    state.globalScore.totalAttempted++;
+                }
+            });
+
+            state.evaluated[roomId] = true;
+            
+            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
+            globalScoreEl.innerText = `${perc}%`;
+
+            loadRoom(roomId, document.querySelector('.room-tab.active'));
+
+            roomBanner.innerHTML = `
+                <h2 class="text-2xl font-bold gradient-text mb-2">Room Completed!</h2>
+                <p class="text-[var(--text-main)]">You scored <strong>${correct}</strong> out of <strong>${totalObjective}</strong> strictly evaluated items.</p>
+                <p class="text-xs text-[var(--text-muted)] mt-2">Subjective responses have been unlocked with ideal grading keys for self-assessment.</p>
+            `;
+            roomBanner.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function updateSubmitUI() {
+            const roomId = state.currentRoom;
+            const hasQuestions = examQuestions[roomId].questions.length > 0;
+            if (state.evaluated[roomId] || !hasQuestions) {
+                submitContainer.classList.add('hidden');
+            } else {
+                submitContainer.classList.remove('hidden');
+                roomBanner.classList.add('hidden');
+            }
+        }
+
+        // Sticky Navigator Logic
+        let currentScrollIndex = 0;
+        function updateProgress() {
+            const roomId = state.currentRoom;
+            const total = examQuestions[roomId].questions.length;
+            if(total === 0) return;
+            
+            const answered = Object.keys(state.answers[roomId]).filter(k => {
+                const val = state.answers[roomId][k];
+                return val !== undefined && val !== '';
+            }).length;
+            
+            navCounter.innerText = `Question ${currentScrollIndex + 1} / ${total}`;
+            navProgress.style.width = `${(answered / total) * 100}%`;
+        }
+
+        function setupIntersectionObserver() {
+            const cards = document.querySelectorAll('.question-card');
+            const options = { root: null, rootMargin: '0px', threshold: 0.5 };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        currentScrollIndex = parseInt(id.replace('qcard-', ''));
+                        updateProgress();
+                    }
+                });
+            }, options);
+
+            cards.forEach(card => observer.observe(card));
+        }
+
+        navPrev.addEventListener('click', () => {
+            if (currentScrollIndex > 0) {
+                document.getElementById(`qcard-${currentScrollIndex - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        navNext.addEventListener('click', () => {
+            const total = examQuestions[state.currentRoom].questions.length;
+            if (currentScrollIndex < total - 1) {
+                document.getElementById(`qcard-${currentScrollIndex + 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
