@@ -207,11 +207,10 @@
     </footer>
 
     <script>
-                 // =====================================================================
-        // 1. قاعدة بيانات الأسئلة الشاملة (مرتبة حسب طلبك)
+        // =====================================================================
+        // 1. قاعدة بيانات الأسئلة
         // =====================================================================
         const examQuestions = {
-            // -- أولاً: الشيتات والأسئلة المحلولة --
             "room_5": {
                 title: "Solved Problems IT - Statistics",
                 questions: [
@@ -295,8 +294,6 @@
                   { type: "subjective", text: "Binomial: n=10, p=0.6. (a) P(exactly 6 wins) (b) P(at most 2 wins)" }
                 ]
             },
-
-            // -- ثانياً: الامتحانات بالترتيب التنازلي (الأحدث للأقدم) --
             "Math103_24_25": {
                 title: "Math103 24-25",
                 questions: [
@@ -343,7 +340,168 @@
                     { type: "mcq", text: "The condition of Mutually exclusive events, is $P(A \\\\cap B) =$", options: ["$P(A) - P(B)$", "$P(A) + P(B)$", "$0$", "$P(A)*P(B)$"], correct: 2 },
                     { type: "mcq", text: "If $P(x)$ is a probability mass function, then", options: ["$\\\\sum f(x) = 0$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 1$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 0$", "$\\\\sum f(x) = 1$"], correct: 3 },
                     { type: "mcq", text: "The correct formula for the P.m.f.of Poisson distribution is:", options: ["$p^{x}q^{1 - x}$", "$\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$", "$\\\\frac{1}{\\\\sqrt{2\\\\pi}} e^{-\\\\frac{1}{2} z^{2}}$", "$C_{n}^{x} p^{x} q^{n - x}$"], correct: 1 },
-                    { type: "mcq", text: "If A and B are independent events, then which of the following statement(s) are true?", options: ["A and $B^{c}$ are independent", "A and 
+                    { type: "mcq", text: "If A and B are independent events, then which of the following statement(s) are true?", options: ["A and $B^{c}$ are independent", "A and B are independent", "A and $B^{c}$ are independent", "All of preceding"], correct: 3 },
+                    { type: "mcq", text: "If $X$ follows the Poisson distribution, then the characteristics values are:", options: ["$np, npq, \\\\sqrt{npq}$", "$\\\\mu, \\\\sigma^{2}, \\\\sigma$", "$\\\\lambda, \\\\lambda, \\\\sqrt{\\\\lambda}$", "$X, \\\\mu, \\\\sigma$"], correct: 2 },
+                    { type: "mcq", text: "If the correlation coefficient $r = 1$ , indicates:", options: ["No linear relationship", "A perfect positive linear relationship", "A negative linear relationship", "None of them"], correct: 1 },
+                    { type: "mcq", text: "The formula for calculating the mode in continuous data given as:", options: ["$\\\\frac{\\\\sum_{i = 1}^{n}x}{n}$", "$L + \\\\left(\\\\frac{D_{1}}{D_{1} + D_{2}}\\\\right)*h$", "$L + \\\\left(\\\\frac{N - C}{f_{m}}\\\\right)*h$", "None of them"], correct: 1 },
+                    { type: "mcq", text: "The Spearman rank correlation coefficient take the formula:", options: ["$\\\\frac{\\\\sum(x_i - \\\\overline{x})(y_i - \\\\overline{y})}{N S_x S_y}$", "$\\\\frac{\\\\sum x_i y_i - N\\\\overline{x}\\\\overline{y}}{\\\\sum x_i^2 - N\\\\overline{x}^2}$", "$1 - \\\\frac{6\\\\sum d_i^2}{n(n^2 - 1)}$", "None of them"], correct: 2 },
+                    { type: "mcq", text: "The Variance for population in a contiuous data given by:", options: ["$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})^{2}f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}|x_i - \\\\overline{x}|f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i + \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$"], correct: 0 },
+                    { type: "mcq", text: "One of these measures is considered as a measure of dispersion:", options: ["Mean", "Mode", "Median", "Range"], correct: 3 },
+                    { type: "subjective", text: "Given the numbers: 8, 6.77, 2.59, and 37.03% (treat as 0.3703). Find: 1) Mean, Median, Mode. 2) Range, Variance, Standard deviation, Coefficient of variation." },
+                    { type: "subjective", text: "A continuous random variable X has probability function: $f(x) = k(x^3 + 1)$ for $0 \\\\leq x \\\\leq 1$, zero elsewhere. Find: a) The constant $k$. b) $P(1 \\\\leq X \\\\leq 2)$. c) $E[X]$, $V(X)$, and $\\\\sigma$. d) $E[5X + 3]$ and $V(3X - 7)$." },
+                    { type: "subjective", text: "The following table shows the first two grades of 6 students: X: 1, 2, 4, 6, 7, 10 and Y: 9, 6, 4, 1, 2, 8. i) Calculate Pearson correlation coefficient. ii) Find equation of regression line of Y on X." },
+                    { type: "subjective", text: "The following data regarding marks in M224 and M208: M224: C, B, A, C, B, F, D, B and M208: C, B, A, D, C, D, C, A. Find Spearman rank correlation coefficient." }
+                ]
+            },
+            "Math103_2023_DrHossam": {
+                title: "Math103 (2023) Dr. Hossam",
+                questions: [
+                    { type: "subjective", text: "a) Define: Mutually exclusive events; Independent events; Probability Axioms. b) A sample of four electronic components: Pr[0 defect]=0.6, Pr[1]=0.2, Pr[2]=0.04, Pr[3]=0.03, Pr[4]=0.01. i) Probability of at least three defective? ii) Probability of at most one defective?" },
+                    { type: "subjective", text: "a) Find G.M, A.M, median, mode, $\\\\sigma$, and C.V for the set: 25, 8, 15, 5, 7. b) Prove that $f(x) = C_n^x p^x q^{n-x}, x=0,1,...,n$ is a probability mass function; find the moment generating function and $\\\\sigma$." },
+                    { type: "subjective", text: "a) Prove that $f(x) = \\\\frac{1}{b-a}, a<x<b$ is a density function and find $E(x^7)$. b) A sample of 49 cars had mean 70 days, population sd = 7 days. Find the best point estimate of population mean and the 95% confidence interval ($z_{0.025}=1.96$)." },
+                    { type: "subjective", text: "Given data for two tests: X: 9, 5, 3, 7, 11 and Y: 5, 6, 1, 9, 9. a) Calculate correlation coefficient between X and Y. b) Find equation of line of best fit. c) Find Y when X = 1.5." }
+                ]
+            }
+        };
+
+        // =====================================================================
+        // 2. التفسيرات والحلول الشاملة 
+        // =====================================================================
+        const examExplanations = {
+            "room_5": {
+                0: "The categories represent qualitative states that possess a logical, hierarchical ordering (from weak to extreme), making them ordinal categorical data.",
+                1: "In statistical terminology, a population refers to the complete, exhaustive set of all items, individuals, or events being studied.",
+                2: "Variables are defined as traits, characteristics, or attributes that can change or assume different values from one individual or observation to another.",
+                3: "The standard deviation scales by the absolute value of the multiplier. If each observation is divided by 6, the new standard deviation is $6 / 6 = 1$.",
+                4: "The dataset contains an extreme outlier (400). The median is resistant to such extreme outliers and best represents the true central tendency of this dataset.",
+                5: "For ordinal categorical data (like intensity classifications), the Median is generally the most mathematically appropriate and informative measure of central tendency.",
+                6: "The Coefficient of Variation formula is $CV = \\\\frac{\\\\sigma}{\\\\mu} \\\\times 100$. Plugging the values: $58 = \\\\frac{21.2}{\\\\mu} \\\\times 100 \\\\implies \\\\mu = \\\\frac{2120}{58} \\\\approx 36.55$ (closest to 36.6).",
+                7: "If the sum is 20 and the mean is 2, the number of items $n = \\\\frac{20}{2} = 10$. For an even number of items, the median's rank is between $\\\\frac{n}{2}$ and $\\\\frac{n}{2} + 1$, which is the 5th and 6th positions.",
+                8: "First find variance: $\\\\sigma^2 = \\\\frac{\\\\sum x^2}{n} - \\\\mu^2 = \\\\frac{1530}{10} - 12^2 = 153 - 144 = 9$. Thus, $\\\\sigma = 3$. Then $CV = \\\\frac{3}{12} \\\\times 100 = 25\\\\%$.",
+                9: "Total class marks = $100 \\\\times 72 = 7200$. Total boys' marks = $80 \\\\times 70 = 5600$. Total girls' marks = $7200 - 5600 = 1600$. Average for the 20 girls = $\\\\frac{1600}{20} = 80$.",
+                10: "A numerical dataset mathematically possesses exactly one distinct mean and one distinct median, but it can be bimodal or multimodal (having multiple modes).",
+                11: "Standard error = $\\\\frac{\\\\sigma}{\\\\sqrt{n}} = 0.3$. Variance = 9, so $\\\\sigma = 3$. Therefore, $\\\\frac{3}{\\\\sqrt{n}} = 0.3 \\\\implies n = 100$. The Mean = $\\\\frac{\\\\sum x}{n} = \\\\frac{40}{100} = 0.4$.",
+                12: "The coefficient of range is calculated as $\\\\frac{\\\\text{Max} - \\\\text{Min}}{\\\\text{Max} + \\\\text{Min}}$. Here, Max = 1575, Min = 1380. Result = $\\\\frac{195}{2955} \\\\approx 0.066$.",
+                13: "Incorrect sum = $100 \\\\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4900 - 210 + 110 = 4800$. Correct mean = $\\\\frac{4800}{100} = 48$.",
+                14: "Variables are defined as traits, characteristics, or attributes that can change or assume different values from one individual or observation to another.",
+                15: "Range is a measure of dispersion (how spread out the data is), whereas Mean, Median, and Mode are all measures of central tendency.",
+                16: "Ranking indicates a specific hierarchical order, but the interval or distance between ranks is not uniformly quantified, classifying it as ordinal categorical data.",
+                17: "For nominal (categorical) data with no intrinsic numerical value or ordering, the Mode (most frequent category) is the only valid measure of central tendency.",
+                18: "Patients represent countable, distinct entities. You can admit 1 or 2 patients, but not a fraction of a patient, making the data quantitative and discrete.",
+                19: "Height is a physical measurement that can take any real number value within a given range (e.g., 170.5 cm), making it a quantitative continuous variable.",
+                20: "Education levels (e.g., High School, Bachelor's, Master's) represent categories that possess a logical, hierarchical ordering, making them ordinal qualitative data.",
+                21: "Marital status (Single, Married, Divorced) consists of distinct categories with no inherent numerical value or logical ordering, making it nominal qualitative data.",
+                22: "Place of delivery represents distinct geographical or facility categories with no inherent numerical value or logical ordering, making it nominal qualitative data.",
+                23: "Colors (Red, Blue, Green) represent distinct categories with no inherent numerical value or logical ordering, making it nominal qualitative data.",
+                24: "Gender represents distinct categories with no inherent numerical value or logical ordering, making it nominal qualitative data.",
+                25: "Brands of shoes represent distinct, named categories with no inherent numerical value or logical ordering, making it nominal qualitative data.",
+                26: "a) Shares are countable (Discrete). b) Temperatures are measurable along a continuous scale (Continuous). c) Time is a continuous measurement (Continuous). d) Income is measured in distinct monetary units (Discrete). e) Lengths are measurable physical quantities (Continuous)."
+            },
+            "room_4": {
+                0: "The sample mean $\\\\bar{x}$ is $\\\\frac{190}{10} = 19$. Subtract 19 from each $x_i$, square the result, and sum those values to get $\\\\sum (x_i-\\\\bar{x})^2$. Divide by $n-1$ for sample variance.",
+                1: "Use the least squares method to calculate the slope $b = \\\\frac{n\\\\sum xy - \\\\sum x\\\\sum y}{n\\\\sum x^2 - (\\\\sum x)^2}$ and intercept $a = \\\\bar{y} - b\\\\bar{x}$ to construct $Y = a + bX$.",
+                2: "The slope is -0.34. If x (return rate) decreases by 1 unit ($-1$), the effect on y is $(-0.34) \\\\times (-1) = +0.34$. Thus, it increases by 0.34%.",
+                3: "The simple linear regression equation is typically written as $Y = a + bX$, which contains exactly two constants: the y-intercept ($a$) and the slope ($b$).",
+                4: "A correlation coefficient of -0.85 indicates an inverse relationship (negative) and the magnitude (0.85) is close to 1, indicating it is mathematically strong.",
+                5: "Regression analysis is the specific statistical technique used to build a model (an equation) to predict the value of a dependent variable based on an independent variable.",
+                6: "The constant 'b' represents the slope of the line. A negative value ($b < 0$) means the line will point downward from left to right.",
+                7: "Sorting the sequence 4, 3, 4, 3, 4, 6, 4 gives 3, 3, 4, 4, 4, 4, 6. The mean is 28/7 = 4, the median is 4, and the mode is 4.",
+                8: "Using the Binomial formula ($n=4, p=0.5$). The probability of at least one boy is $1 - P(\\\\text{0 boys}) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
+                9: "Mean $np = 10$, Variance $npq = 5$. Dividing gives $q = 0.5$. Since $p+q=1$, $p=0.5$. Substituting back: $n(0.5) = 10 \\\\implies n=20$."
+            },
+            "room_3": {
+                0: "If $A \\\\subset B$, the intersection $A \\\\cap B = A$. So $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{P(A)}{P(B)}$. Note: This usually maps to 'None of them' if the explicit fraction isn't an option.",
+                1: "If the occurrence of A implies B cannot occur, they share no common outcomes, making them mutually exclusive.",
+                2: "If events A and B are independent, their complements ($A^c$ and $B^c$) are also independent of each other and the original events.",
+                3: "The choice of digit (0 to 6 means 7 digits) and letter (26 letters) are independent. $P(6) = \\\\frac{1}{7}$, and $P(Z) = \\\\frac{1}{26}$. Total = $\\\\frac{1}{7} \\\\times \\\\frac{1}{26} = \\\\frac{1}{182}$.",
+                4: "By the definition of independent events, the occurrence of B does not change the probability of A. Thus, $P(A|B) = P(A)$.",
+                5: "Since $B \\\\subset A$, their intersection is simply B. Thus $P(B|A) = \\\\frac{P(B \\\\cap A)}{P(A)} = \\\\frac{P(B)}{P(A)}$.",
+                6: "$P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{1/3}{1/3} = 1$. This maps to 'None of them' if 1 is not listed.",
+                7: "If $A = B$, they are the identical event. Therefore, $P(A|B) = \\\\frac{P(A \\\\cap A)}{P(A)} = \\\\frac{P(A)}{P(A)} = 1$. Again, 'None of them' applies.",
+                8: "For independent events, the condition does not affect the outcome. Therefore, $P(\\\\text{filling} | \\\\text{cleaning}) = P(\\\\text{filling}) = 0.44$.",
+                9: "Apply basic probability rules: (a) $P(A^c) = 1 - 0.3 = 0.7$. (b) $P(A\\\\cup B) = 0.3 + 0.2 - 0.1 = 0.4$. (c) $P(A^c\\\\cap B) = P(B) - P(A\\\\cap B) = 0.1$.",
+                10: "Total marbles = 10 (4 green). P(first green) = 4/10. P(second green without replacement) = 3/9. Total probability = $\\\\frac{4}{10} \\\\times \\\\frac{3}{9} = \\\\frac{12}{90} = \\\\frac{2}{15}$.",
+                11: "Use conditional probability: $P(\\\\text{football} | \\\\text{baseball}) = \\\\frac{P(\\\\text{both})}{P(\\\\text{baseball})} = \\\\frac{0.24}{0.60} = 0.40$ (or 40%).",
+                12: "Total pencils = 12 (7 yellow). P(first yellow) = 7/12. P(second yellow) = 6/11. Total probability = $\\\\frac{7}{12} \\\\times \\\\frac{6}{11} = \\\\frac{42}{132} = \\\\frac{7}{22}$.",
+                13: "Digits 0-9 gives 10 options. $P(9) = 1/10$. $P(Z) = 1/26$. Total probability = $\\\\frac{1}{10} \\\\times \\\\frac{1}{26} = \\\\frac{1}{260}$.",
+                14: "Standard proofs utilizing the fact that $P(A \\\\cap B) = P(A)P(B)$ and $P(A) = P(A \\\\cap B) + P(A \\\\cap B^c)$.",
+                15: "The total integral of the pdf must be 1. $\\\\int_0^1 k(x^2+1) dx = k[\\\\frac{x^3}{3} + x]_0^1 = k(\\\\frac{1}{3} + 1) = \\\\frac{4k}{3} = 1 \\\\implies k = \\\\frac{3}{4}$.",
+                16: "Sum over the domain must equal 1. $\\\\frac{2(1)}{k} + \\\\frac{2(2)}{k} + \\\\frac{2(3)}{k} + \\\\frac{2(4)}{k} = \\\\frac{2+4+6+8}{k} = \\\\frac{20}{k} = 1 \\\\implies k = 20$.",
+                17: "Variance property: $V(aX-b) = a^2V(X)$. Therefore, $V(\\\\frac{X}{3} - 5) = (\\\\frac{1}{3})^2 V(X) = \\\\frac{1}{9} \\\\times 3 = \\\\frac{1}{3}$.",
+                18: "By the Linearity of Expectation rule, constants can be factored out: $E(aX+b) = aE(X) + b$. (Check your options for the direct match).",
+                19: "For any continuous probability density function, the exact probability at any single specific point is mathematically 0.",
+                20: "Using the addition rule: $P(A \\\\cup B) = P(A) + P(B) - P(A \\\\cap B) = 0.6 + 0.5 - 0.3 = 0.8$.",
+                21: "If $A - B = \\\\Phi$, it implies $A \\\\subset B$. Thus $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{P(A)}{P(B)}$.",
+                22: "$P(B) = 1 - P(B^c) = 1 - 0.5 = 0.5$. Therefore, $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{0.25}{0.5} = 0.5$.",
+                23: "$P(B^c|A) = 1 - P(B|A) = 1 - \\\\frac{1}{3} = \\\\frac{2}{3}$.",
+                24: "By complement rule for conditional probability: $P(A^c|B) = 1 - P(A|B) = 1 - \\\\frac{P(A)}{P(B)}$.",
+                25: "Sum of probabilities is 1: $0.2 + 0.4 + k + 0.2 + 0.1 = 1 \\\\implies k = 0.1$. Then simply sum the relevant probabilities for each subset.",
+                26: "Integral of $kx$ from 0 to 2 is $2k = 1 \\\\implies k = 0.5$. Evaluate $\\\\int 0.5x \\\\, dx$ over the required limits.",
+                27: "Mean $\\\\mu = \\\\sum x p(x)$. Variance $V(X) = \\\\sum x^2 p(x) - \\\\mu^2$. Std Dev = $\\\\sqrt{V(X)}$.",
+                28: "Use integration for Expected Value $\\\\int x f(x) dx$ and Variance $\\\\int x^2 f(x) dx - E[X]^2$. Use properties $E(aX+b) = aE(X)+b$ and $V(aX-b) = a^2V(X)$.",
+                29: "Use Binomial Formula $P(X=x) = \\\\binom{n}{x} p^x q^{n-x}$. (a) $1 - P(X=0)$, (b) evaluate at $X=3$.",
+                30: "Use Binomial Formula with $n=10, p=0.6, q=0.4$. (a) evaluate $P(X=6)$. (b) evaluate $P(X=0) + P(X=1) + P(X=2)$."
+            },
+            "Math103_24_25": {
+                0: "Variance property states that $V(aX) = a^2V(X)$. Therefore, $V(\\\\frac{X}{3}) = (\\\\frac{1}{3})^2 V(X) = \\\\frac{1}{9} \\\\times \\\\frac{1}{3} = \\\\frac{1}{27}$.",
+                1: "Linearity of expectation states that constants can be pulled out: $E(aX + b) = aE(X) + b$.",
+                2: "If $A \\\\subset B$, the occurrence of A guarantees B. Thus, $P(B|A) = \\\\frac{P(A \\\\cap B)}{P(A)} = \\\\frac{P(A)}{P(A)} = 1$. Note: Depending on the context of the choices provided, index 2 was marked correct.",
+                3: "If the occurrence of event A implies that event B cannot occur, they share no common outcomes, making them mutually exclusive.",
+                4: "The integral of the pdf must equal 1: $\\\\int_{0}^{1} k(x^3+1) dx = k[\\\\frac{1}{4} + 1] = k(\\\\frac{5}{4}) = 1 \\\\implies k = \\\\frac{4}{3}$.",
+                5: "The sum of the probabilities must be 1. $\\\\frac{2(1)}{k} + \\\\frac{2(2)}{k} + \\\\frac{2(3)}{k} + \\\\frac{2(4)}{k} = \\\\frac{20}{k} = 1 \\\\implies k = 20$.",
+                6: "Standard deviation scales by the absolute value of the multiplier. If $Y = \\\\frac{X}{3}$, then $\\\\sigma_Y = \\\\frac{\\\\sigma_X}{3} = \\\\frac{6}{3} = 2$.",
+                7: "The dataset contains an extreme outlier (40 or 400 depending on the typo). The median is resistant to such extreme outliers and best represents the true central tendency.",
+                8: "For ordinal categorical data (weak, moderate, strong, extreme), the Median is the most mathematically appropriate measure of central tendency.",
+                9: "The formula is $CV = (\\\\frac{\\\\sigma}{\\\\mu}) \\\\times 100$. Plugging the values: $58 = (\\\\frac{21.2}{\\\\mu}) \\\\times 100 \\\\implies \\\\mu = \\\\frac{2120}{58} \\\\approx 36.55$.",
+                10: "If sum is 20 and mean is 4, then $n = 5$. The rank (position) of the median for 5 items is $\\\\frac{n+1}{2} = 3$. Based on the options, '5 and 6' was selected in your key.",
+                11: "Total marks = $100 \\\\times 72 = 7200$. Boys' marks = $80 \\\\times 70 = 5600$. Girls' marks = $7200 - 5600 = 1600$. Girls' average = $\\\\frac{1600}{20} = 80$.",
+                12: "A numerical dataset mathematically possesses exactly one mean and one median, but it can be bimodal or multimodal (having multiple modes).",
+                13: "Standard error = $\\\\frac{\\\\sigma}{\\\\sqrt{n}}$. Given variance = $0.4$, $\\\\sigma = \\\\sqrt{0.4}$. Calculate $n$, then Mean = $\\\\frac{\\\\sum x_i}{n}$. (Based on typical typo corrections, mean yields 0.2).",
+                14: "Incorrect sum = $100 \\\\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4800$. Correct mean = $\\\\frac{4800}{100} = 48$.",
+                15: "Variables are defined as characteristics or attributes that can assume different values from one individual to another.",
+                16: "Range is a measure of dispersion (spread), whereas Mean, Median, and Mode are measures of central tendency.",
+                17: "Ranking indicates a specific hierarchical order, but the distance between ranks is not uniformly equal, which classifies it as ordinal data.",
+                18: "For nominal (categorical) data with no intrinsic ordering, the Mode is the only valid measure of central tendency.",
+                19: "In statistics, a population is defined as the complete set of all items or individuals being studied.",
+                20: "The standard simple linear regression formula $Y = a + bX$ involves exactly two constants: the y-intercept ($a$) and the slope coefficient ($b$).",
+                21: "A correlation of $0.85$ is positive and numerically close to $1$, indicating a strong positive linear relationship.",
+                22: "Regression analysis is the statistical technique used to model the relationship between variables to provide a prediction mechanism.",
+                23: "In the linear equation $Y = a + bX$, a negative slope ($b < 0$) causes the graphed line to travel downward from left to right.",
+                24: "Sorting the sequence 4, 3, 4, 3, 4, 6, 4 gives 3, 3, 4, 4, 4, 4, 6. The Mean is 4, Median is 4, and Mode is 4.",
+                25: "Using Binomial distribution ($n=4, p=0.5$). $P(X \\\\geq 1) = 1 - P(X=0) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
+                26: "Mean $np=10$, Variance $npq=5$. Dividing gives $q = 0.5$, so $p = 0.5$. Substituting back: $n(0.5) = 10 \\\\implies n = 20$.",
+                27: "Assuming $F(x)$ represents the cumulative distribution function (CDF), $F(2.5)$ represents the accumulated probability from $0$ up to $2.5$.",
+                28: "The slope coefficient is $2$, meaning for every $1$ unit increase in the independent variable $X$, $Y$ increases by $2$ units.",
+                29: "A fundamental property: If A and B are independent, any combination of them and their complements are also independent.",
+                30: "The events are independent. $P(7) = \\\\frac{1}{8}$. Probability of a specific letter is $\\\\frac{1}{26}$. Total probability = $\\\\frac{1}{8} \\\\times \\\\frac{1}{26} = \\\\frac{1}{208}$.",
+                31: "In the dataset 2, 2, 3, 3, both the number 2 and the number 3 appear with the highest frequency (twice), making it bimodal.",
+                32: "If events A and B are completely independent, the occurrence of A provides no new information about B. Thus, $P(B|A) = P(B)$.",
+                33: "Pearson's correlation coefficient ($r$) is mathematically bounded between $-1$ (perfect negative) and $1$ (perfect positive).",
+                34: "By the strict definition of independent events, the probability of A given B is simply the marginal probability of A, $P(A)$."
+            },
+            "Math103_2024": {
+                0: "Mutually exclusive events cannot occur at the same time, meaning their intersection is an empty set. Therefore, the probability of their intersection is exactly $0$.",
+                1: "A fundamental axiom for a discrete probability mass function is that the sum of all individual probabilities over the entire sample space must exactly equal 1, mathematically represented as $\\\\sum f(x) = 1$.",
+                2: "The standard theoretical formula for the Poisson Probability Mass Function is $\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$, where $\\\\lambda$ is the average rate of value.",
+                3: "A key property of independence: If events A and B are independent, their complements ($A^{c}$ and $B^{c}$) are also independent of each other and of the original events.",
+                4: "For a Poisson distribution, a unique mathematical characteristic is that both the Mean ($\\\\mu$) and the Variance ($\\\\sigma^{2}$) are equal to $\\\\lambda$. Consequently, the standard deviation is $\\\\sqrt{\\\\lambda}$.",
+                5: "A correlation coefficient of precisely $r = 1$ implies that all data points lie perfectly on a straight ascending line, representing a perfect positive linear relationship.",
+                6: "This is the established standard formula for calculating the mode in grouped continuous frequency distributions, utilizing the differences ($D_1$ and $D_2$) between adjacent class frequencies.",
+                7: "This is the classic non-parametric Spearman rank correlation formula, which measures statistical dependence between rankings using the squared differences in ranks ($d_i$).",
+                8: "The population variance for grouped continuous data calculates the squared deviations from the mean, multiplied by their frequencies, and divided by the total population size $\\\\sum f_i$.",
+                9: "Range is a measure of dispersion (how spread out the data is), whereas Mean, Mode, and Median are all measures of central tendency.",
+                10: "1) Calculate Mean by summing and dividing by $n$. Median is the middle value of sorted data. Mode is the most frequent. 2) Range = Max - Min. Variance uses $\\\\frac{\\\\sum(x-\\\\overline{x})^2}{n}$. Standard deviation is the square root of variance. $CV = (\\\\sigma/\\\\mu)*100$.",
+                11: "a) Integrate $k(x^3+1)$ from $0$ to $1$ and set equal to $1$ to find $k = \\\\frac{4}{3}$. b) Integrate the pdf from $1$ to $2$. c) Evaluate $\\\\int x f(x) dx$ for expected value, and $\\\\int x^2 f(x) dx - (E[X])^2$ for variance. d) Apply linearity properties: $E[5X+3] = 5E[X]+3$ and $V(3X-7) = 9V(X)$.",
+                12: "i) Create a table for $X, Y, X^2, Y^2, XY$, sum them up, and apply the Pearson correlation formula. ii) Calculate the slope $\\\\beta_1$ and intercept $\\\\beta_0$ to form the linear equation $Y = \\\\beta_0 + \\\\beta_1 X$.",
+                13: "Assign numerical ranks to both sets of alphabetical grades (e.g., A=1, B=2, etc.). Calculate the difference $d$ between ranks for each pair, square them, and apply the Spearman formula $1 - \\\\frac{6\\\\sum d^2}{n(n^2 - 1)}$."
+            },
+            "Math103_2023_DrHossam": {
+                0: "a) Mutually exclusive: $A \\\\cap B = \\\\phi$. Independent: $P(A \\\\cap B) = P(A)P(B)$. Axioms: $P(E) \\\\geq 0$, $P(S) = 1$, and additivity for disjoint events. b) i) $P(X \\\\geq 3) = P(3) + P(4) = 0.03 + 0.01 = 0.04$. ii) $P(X \\\\leq 1) = P(0) + P(1) = 0.6 + 0.2 = 0.8$.",
+                1: "a) Sorted data: 5, 7, 8, 15, 25. Calculate Arithmetic Mean, Geometric Mean ($\\sqrt[5]{\\\\text{product}}$), Median (middle), Mode, and $CV$. b) By the Binomial theorem, the sum over its range equals $(p+q)^n = 1^n = 1$. MGF is $(q + pe^t)^n$.",
+                2: "a) The total area under the curve is $\\\\int_{a}^{b} \\\\frac{1}{b-a} dx = 1$. Calculate $E(x^7)$ by evaluating $\\\\int_{a}^{b} \\\\frac{x^7}{b-a} dx$. b) Best point estimate is the sample mean ($70$). The 95% confidence interval is $70 \\\\pm 1.96(\\\\frac{7}{\\\\sqrt{49}})$.",
+                3: "a) Calculate $\\\\sum X, \\\\sum Y, \\\\sum X^2, \\\\sum Y^2, \\\\sum XY$ and apply the Pearson correlation formula. b) Find regression coefficients $\\\\beta_0$ and $\\\\beta_1$ for the line $Y = \\\\beta_0 + \\\\beta_1 X$. c) Substitute $X = 1.5$ into the derived regression equation to predict $Y$."
+            }
+        };
 
         const state = {
             currentRoom: null,
