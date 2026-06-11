@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Math103 Exam Portal</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,9 +34,7 @@
                 displayMath: [['$$', '$$']],
                 processEscapes: true
             },
-            startup: {
-                typeset: false 
-            }
+            startup: { typeset: false }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -51,9 +49,6 @@
             --accent-emerald: #34d399;
             --accent-indigo: #6366f1;
             --glass-blur: 16px;
-            --nav-active-bg: rgba(99, 102, 241, 0.2);
-            --nav-active-text: #818cf8;
-            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.15);
         }
 
         body.light-theme {
@@ -64,9 +59,6 @@
             --text-muted: #64748b;
             --accent-emerald: #10b981;
             --accent-indigo: #4338ca;
-            --nav-active-bg: #ede9fe;
-            --nav-active-text: #4338ca;
-            --shadow-glow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         body {
@@ -80,8 +72,7 @@
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-glow);
-            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
         }
 
         .room-tab {
@@ -89,8 +80,8 @@
             white-space: nowrap;
         }
         .room-tab.active {
-            background: var(--nav-active-bg);
-            color: var(--nav-active-text);
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
             border-color: var(--accent-indigo);
             font-weight: 600;
         }
@@ -105,116 +96,86 @@
             border-color: var(--accent-indigo);
             transform: translateY(-1px);
         }
-        .option-wrapper input:checked + div {
-            color: var(--accent-indigo);
-            font-weight: 600;
-        }
-        
+
         .badge-pass {
             border-color: var(--accent-emerald) !important;
-            background: rgba(52, 211, 153, 0.1) !important;
+            background: rgba(52, 211, 153, 0.15) !important;
         }
         .badge-fail {
             border-color: #ef4444 !important;
-            background: rgba(239, 68, 68, 0.1) !important;
+            background: rgba(239, 68, 68, 0.15) !important;
         }
-        .disabled { cursor: not-allowed !important; opacity: 0.9; }
+        .disabled { cursor: not-allowed !important; }
+
+        .question-header h3 {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .fade-in { animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* تحسينات الموبايل - لف النصوص */
-        .question-text {
-            word-break: break-word;
-            white-space: normal;
-            line-height: 1.5;
-        }
-        
-        .option-text {
-            word-break: break-word;
-            white-space: normal;
-            line-height: 1.4;
-        }
-        
-        @media (max-width: 640px) {
-            .glass-panel {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-            .option-wrapper {
-                padding: 0.75rem;
-            }
-        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen relative flex flex-col">
 
-    <header class="sticky top-0 z-40 glass-panel border-b border-l-0 border-r-0 border-t-0 px-4 sm:px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2 sm:gap-3">
-            <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
-                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+    <header class="sticky top-0 z-40 glass-panel border-b border-l-0 border-r-0 border-t-0 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
             </div>
             <div>
-                <h1 class="text-lg sm:text-xl font-bold tracking-tight">Math103 Portal</h1>
+                <h1 class="text-xl font-bold tracking-tight">Math103 Portal</h1>
                 <p class="text-xs text-[var(--text-muted)]">Probability & Statistics</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-3 sm:gap-6">
+        <div class="flex items-center gap-6">
             <div class="hidden sm:flex flex-col items-end">
                 <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Live Score</span>
                 <span id="global-score" class="text-2xl font-bold gradient-text">0%</span>
             </div>
-            <button id="theme-toggle" class="glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+            <button id="theme-toggle" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
                 🌙 Dark
             </button>
         </div>
     </header>
 
-    <div class="px-3 sm:px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
-        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-2 sm:space-x-3 pb-2 scroll-smooth">
-            </div>
+    <div class="px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
+        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth"></div>
     </div>
 
-    <main class="flex-grow p-3 sm:p-4 max-w-4xl mx-auto w-full mb-10">
-        <form id="exam-form" class="space-y-4 sm:space-y-6">
-            </form>
+    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-10">
+        <form id="exam-form" class="space-y-6"></form>
 
-        <div class="mt-8 sm:mt-10 flex justify-center">
-            <button type="button" id="reset-exam-btn" class="px-4 py-2 sm:px-6 sm:py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
+        <div class="mt-10 flex justify-center">
+            <button type="button" id="reset-exam-btn" class="px-6 py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
                 🗑️ مسح التقدم وإعادة البدء (Reset Progress)
             </button>
         </div>
     </main>
 
-    <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-4 sm:py-6 px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-        <div class="text-xs sm:text-sm font-semibold text-[var(--text-muted)] tracking-wide">
+    <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div class="text-sm font-semibold text-[var(--text-muted)] tracking-wide">
             Minia University - Faculty of Science
         </div>
-        <div class="text-xs sm:text-sm font-bold tracking-widest gradient-text">
+        <div class="text-sm font-bold tracking-widest gradient-text">
             ENG: AHMED ABO ANWER <span class="text-[var(--text-muted)] mx-2">|</span> ENG: HAMZA KAFAFI
         </div>
     </footer>
 
     <script>
         // =====================================================================
-        // 1. قاعدة بيانات الأسئلة
+        // 1. قاعدة بيانات الأسئلة (كاملة)
         // =====================================================================
-        const examQuestions = {
+ const examQuestions = {
             "room_5": {
                 title: "Solved Problems IT - Statistics",
                 questions: [
@@ -507,14 +468,15 @@
             }
         };
 
+
         // =====================================================================
-        // 3. App Logic (Instant Feedback & LocalStorage Fix)
+        // 3. App Logic (النسخة المُحسّنة)
         // =====================================================================
         const STORAGE_KEY = 'math103_exam_progress';
 
         let state = {
             currentRoom: null,
-            answers: {},      
+            answers: {},
             questionEvaluated: {},
             globalScore: { totalAttempted: 0, totalCorrect: 0 }
         };
@@ -525,27 +487,22 @@
         const globalScoreEl = document.getElementById('global-score');
         const resetBtn = document.getElementById('reset-exam-btn');
 
-        // حل مشكلة الريفرش: دمج الداتا المحفوظة مع الغرف الجديدة
         function loadProgress() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    state = parsed;
+                    state = Object.assign({}, state, parsed);
                 } catch(e) {
-                    console.error("Error parsing saved state.");
+                    console.error("Error parsing saved progress");
                 }
             }
-            
-            // التأكد من أن كل الغرف الحالية موجودة في المتغيرات حتى لو لم تكن محفوظة مسبقاً
+
+            // تهيئة الغرف الجديدة
             Object.keys(examQuestions).forEach(roomId => {
-                if (!state.answers) state.answers = {};
-                if (!state.questionEvaluated) state.questionEvaluated = {};
-                
                 if (!state.answers[roomId]) state.answers[roomId] = {};
                 if (!state.questionEvaluated[roomId]) state.questionEvaluated[roomId] = {};
             });
-            
             if (!state.globalScore) state.globalScore = { totalAttempted: 0, totalCorrect: 0 };
         }
 
@@ -554,7 +511,8 @@
         }
 
         function updateLiveScore() {
-            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
+            const perc = state.globalScore.totalAttempted === 0 ? 0 : 
+                Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
             globalScoreEl.innerText = `${perc}%`;
         }
 
@@ -567,109 +525,70 @@
         themeBtn.addEventListener('click', () => {
             isLight = !isLight;
             document.body.classList.toggle('light-theme', isLight);
-            themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
+            themeBtn.innerHTML = isLight ? '☀️ Light' : '🌙 Dark';
         });
-
-        function recalcGlobalScore() {
-            let attempted = 0;
-            let correct = 0;
-            
-            for (const roomId in state.questionEvaluated) {
-                const roomEval = state.questionEvaluated[roomId];
-                const roomQuestions = examQuestions[roomId]?.questions;
-                if (!roomQuestions) continue;
-                
-                for (let idx in roomEval) {
-                    if (roomEval[idx] === true) {
-                        attempted++;
-                        const userAnswer = state.answers[roomId]?.[idx];
-                        const q = roomQuestions[idx];
-                        if (q && q.type === 'mcq' && userAnswer !== undefined && userAnswer === q.correct) {
-                            correct++;
-                        }
-                    }
-                }
-            }
-            
-            state.globalScore = { totalAttempted: attempted, totalCorrect: correct };
-            updateLiveScore();
-        }
 
         function initApp() {
             loadProgress();
-            recalcGlobalScore();
+            updateLiveScore();
 
-            // تحديد الغرفة المراد تحميلها عند فتح الصفحة
             let roomToLoad = state.currentRoom || Object.keys(examQuestions)[0];
             let btnToClick = null;
 
-            Object.keys(examQuestions).forEach((roomId, index) => {
+            Object.keys(examQuestions).forEach((roomId) => {
                 const btn = document.createElement('button');
-                btn.className = `room-tab px-4 sm:px-5 py-2 rounded-xl font-medium text-sm glass-panel border flex-shrink-0`;
+                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border flex-shrink-0`;
                 btn.innerText = examQuestions[roomId].title;
                 btn.onclick = () => loadRoom(roomId, btn);
                 navContainer.appendChild(btn);
                 
-                if (roomId === roomToLoad) {
-                    btnToClick = btn;
-                }
+                if (roomId === roomToLoad) btnToClick = btn;
             });
             
-            if (btnToClick) {
-                loadRoom(roomToLoad, btnToClick);
-            }
+            if (btnToClick) loadRoom(roomToLoad, btnToClick);
         }
 
         function loadRoom(roomId, btnElement) {
             state.currentRoom = roomId;
-            saveProgress(); // حفظ الغرفة الحالية في حالة الريفرش
-            
+            saveProgress();
+
             document.querySelectorAll('.room-tab').forEach(b => b.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
-            
+
             formContainer.innerHTML = '';
             formContainer.classList.remove('fade-in');
-            void formContainer.offsetWidth; 
+            void formContainer.offsetWidth;
             formContainer.classList.add('fade-in');
-            
+
             const questions = examQuestions[roomId].questions;
 
-            if(questions.length === 0) {
-                formContainer.innerHTML = `<div class="text-center py-10 text-[var(--text-muted)] font-bold">لا توجد أسئلة متاحة.</div>`;
-                return;
-            }
-            
             questions.forEach((q, index) => {
-                const isEvaluated = state.questionEvaluated[roomId][index];
-                const savedAnswer = state.answers[roomId][index];
-
+                const isEvaluated = !!state.questionEvaluated[roomId][index];
                 const card = document.createElement('div');
-                card.id = `qcard-${index}`;
-                card.className = 'glass-panel rounded-2xl p-4 sm:p-6 transition-all duration-300 relative overflow-hidden question-card';
-                
+                card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden question-card';
+
                 const processedText = fixLatexEscaping(q.text);
 
                 const header = document.createElement('div');
-                header.className = 'flex items-start gap-3 mb-4';
+                header.className = 'flex flex-col sm:flex-row sm:items-start gap-4 mb-5';
                 header.innerHTML = `
-                    <span class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-sm flex-shrink-0">
+                    <span class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-2xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-base">
                         ${index + 1}
                     </span>
-                    <h3 class="text-base sm:text-lg font-medium leading-relaxed question-text flex-grow">${processedText}</h3>
+                    <h3 class="text-base sm:text-lg font-medium leading-relaxed flex-1 question-header">${processedText}</h3>
                 `;
                 card.appendChild(header);
 
-                if (q.type === 'mcq' || q.type === 'tf') {
-                    const gridClass = q.type === 'tf' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2';
+                if (q.type === 'mcq') {
                     const optionsContainer = document.createElement('div');
-                    optionsContainer.className = `grid ${gridClass} gap-2 sm:gap-3 mt-4`;
-                    
+                    optionsContainer.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2';
+
                     q.options.forEach((opt, optIndex) => {
-                        const isChecked = (savedAnswer !== undefined && savedAnswer === optIndex);
+                        const isChecked = state.answers[roomId][index] === optIndex;
                         const wrapper = document.createElement('label');
-                        wrapper.className = `option-wrapper flex items-center p-3 sm:p-4 rounded-xl cursor-pointer relative`;
-                        if(isEvaluated) wrapper.classList.add('disabled');
-                        
+                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative text-sm`;
+                        if (isEvaluated) wrapper.classList.add('disabled');
+
                         const input = document.createElement('input');
                         input.type = 'radio';
                         input.name = `q-${roomId}-${index}`;
@@ -677,21 +596,19 @@
                         input.className = 'hidden';
                         input.checked = isChecked;
                         input.disabled = isEvaluated;
-                        
-                        // التصحيح الفوري (Instant Feedback)
+
                         if (!isEvaluated) {
                             input.addEventListener('change', () => {
-                                if(state.questionEvaluated[roomId][index]) return; // منع التغيير لو اتحل
-                                
+                                if (state.questionEvaluated[roomId][index]) return;
+
                                 state.answers[roomId][index] = optIndex;
                                 state.questionEvaluated[roomId][index] = true;
-                                
-                                // Score Logic
+
                                 state.globalScore.totalAttempted++;
-                                if(optIndex === q.correct) state.globalScore.totalCorrect++;
+                                if (optIndex === q.correct) state.globalScore.totalCorrect++;
+
                                 updateLiveScore();
-                                
-                                // Lock inputs & Styling
+
                                 const allWrappers = card.querySelectorAll('.option-wrapper');
                                 card.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
                                 allWrappers.forEach(w => w.classList.add('disabled'));
@@ -700,26 +617,19 @@
                                 if (optIndex !== q.correct) {
                                     allWrappers[optIndex].classList.add('badge-fail');
                                 }
-                                
-                                // Show Explanation
+
                                 appendExplanation(card, roomId, index, q);
-                                
                                 saveProgress();
                             });
                         }
 
-                        const processedOpt = fixLatexEscaping(opt);
                         const textDiv = document.createElement('div');
-                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm option-text';
-                        textDiv.innerHTML = processedOpt;
-                        
-                        // Render loaded state (لو كان محلول قبل كده والصفحة اتعملها ريفرش)
+                        textDiv.className = 'flex-1';
+                        textDiv.innerHTML = fixLatexEscaping(opt);
+
                         if (isEvaluated) {
-                            if (optIndex === q.correct) {
-                                wrapper.classList.add('badge-pass');
-                            } else if (isChecked && optIndex !== q.correct) {
-                                wrapper.classList.add('badge-fail');
-                            }
+                            if (optIndex === q.correct) wrapper.classList.add('badge-pass');
+                            else if (isChecked) wrapper.classList.add('badge-fail');
                         }
 
                         wrapper.appendChild(input);
@@ -727,19 +637,13 @@
                         optionsContainer.appendChild(wrapper);
                     });
                     card.appendChild(optionsContainer);
-                    
-                    // إذا كان السؤال محلول سابقاً، أضف الـ Explanation
-                    if (isEvaluated) {
-                        appendExplanation(card, roomId, index, q);
-                    }
-                    
                 } else if (q.type === 'subjective') {
                     const textArea = document.createElement('textarea');
-                    textArea.className = 'w-full h-28 sm:h-32 p-3 sm:p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-indigo)] transition-colors resize-none';
-                    textArea.placeholder = "Formulate your mathematical proof or logic here...";
-                    textArea.value = savedAnswer || '';
+                    textArea.className = 'w-full h-40 p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm resize-y focus:outline-none focus:border-[var(--accent-indigo)]';
+                    textArea.placeholder = "اكتب إجابتك هنا...";
+                    textArea.value = state.answers[roomId][index] || '';
                     textArea.disabled = isEvaluated;
-                    
+
                     if (!isEvaluated) {
                         textArea.addEventListener('input', (e) => {
                             state.answers[roomId][index] = e.target.value;
@@ -748,55 +652,46 @@
 
                         const showAnsBtn = document.createElement('button');
                         showAnsBtn.type = 'button';
-                        showAnsBtn.className = 'mt-3 sm:mt-4 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors text-[var(--text-main)]';
+                        showAnsBtn.className = 'mt-4 px-5 py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors';
                         showAnsBtn.innerText = '👁️ إظهار الحل النموذجي';
-                        showAnsBtn.onclick = (e) => {
-                            e.preventDefault();
+                        showAnsBtn.onclick = () => {
                             state.questionEvaluated[roomId][index] = true;
                             textArea.disabled = true;
                             showAnsBtn.remove();
                             appendExplanation(card, roomId, index, q);
-                            recalcGlobalScore();
                             saveProgress();
                         };
+                        card.appendChild(textArea);
                         card.appendChild(showAnsBtn);
+                    } else {
+                        card.appendChild(textArea);
                     }
-                    
-                    if (isEvaluated) {
-                        appendExplanation(card, roomId, index, q);
-                    }
-                    
-                    card.appendChild(textArea);
                 }
 
+                if (isEvaluated) appendExplanation(card, roomId, index, q);
                 formContainer.appendChild(card);
             });
 
-            MathJax.typesetPromise([formContainer]).catch(err => console.log("MathJax error:", err));
+            MathJax.typesetPromise([formContainer]);
         }
 
         function appendExplanation(card, roomId, index, q) {
-            // تجنب إضافة الشرح مرتين
-            if (card.querySelector('.explanation-box')) return;
-            
             const expBox = document.createElement('div');
-            expBox.className = 'explanation-box mt-4 p-3 sm:p-4 rounded-xl bg-[var(--bg-body)] border text-sm fade-in';
-            const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
-            
-            if (q.type === 'mcq' || q.type === 'tf') {
-                expBox.classList.add('border-[var(--accent-indigo)]', 'opacity-90', 'border-l-4', 'border-l-[var(--accent-indigo)]');
-                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> <span class="question-text">${fixLatexEscaping(explanationText)}</span>`;
-            } else if (q.type === 'subjective') {
-                expBox.classList.add('badge-pass', 'border');
-                expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans block mb-1">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap question-text">${fixLatexEscaping(explanationText)}</span>`;
+            const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح.";
+
+            if (q.type === 'mcq') {
+                expBox.className = 'mt-5 p-5 rounded-2xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in border-l-4 border-l-[var(--accent-indigo)]';
+                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)]">Explanation:</strong><br>${fixLatexEscaping(explanationText)}`;
+            } else {
+                expBox.className = 'mt-5 p-5 rounded-2xl bg-emerald-950/30 border border-emerald-500 text-sm fade-in';
+                expBox.innerHTML = `<strong class="text-emerald-400 block mb-2">الحل النموذجي:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
             }
             card.appendChild(expBox);
-            MathJax.typesetPromise([expBox]).catch(err => console.log("MathJax error:", err));
+            MathJax.typesetPromise([expBox]);
         }
 
-        // مسح التقدم (Reset Progress)
         resetBtn.addEventListener('click', () => {
-            if(confirm('⚠️ هل أنت متأكد أنك تريد مسح جميع إجاباتك وإعادة البدء من جديد؟')) {
+            if (confirm('هل أنت متأكد أنك تريد مسح جميع التقدم؟')) {
                 localStorage.removeItem(STORAGE_KEY);
                 location.reload();
             }
