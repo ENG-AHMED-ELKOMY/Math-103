@@ -101,12 +101,11 @@
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        .option-wrapper:hover {
+        .option-wrapper:not(.locked):hover {
             border-color: var(--accent-indigo);
             transform: translateY(-1px);
         }
         .option-wrapper input:checked + div {
-            color: var(--accent-indigo);
             font-weight: 600;
         }
         
@@ -136,15 +135,18 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* New styles for immediate feedback */
+        /* Styles for immediate feedback */
         .option-wrapper.correct {
             border-color: var(--accent-emerald) !important;
             background: rgba(52, 211, 153, 0.15) !important;
+            color: var(--accent-emerald) !important;
         }
         .option-wrapper.incorrect {
             border-color: #ef4444 !important;
             background: rgba(239, 68, 68, 0.15) !important;
+            color: #ef4444 !important;
         }
+        .locked { cursor: default !important; }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen relative flex flex-col">
@@ -516,25 +518,27 @@
             }
         };
 
-
-        // Persistent state
+        // Persistent state V2
         let state = {
             currentRoom: null,
+            lastRoom: null,
+            scrollPositions: {},
             answers: {},      
             evaluated: {},    
             globalScore: { totalAttempted: 0, totalCorrect: 0 }
         };
 
-        // Load from localStorage
+        // Load from localStorage (using V2 to reset old broken states)
         function loadProgress() {
-            const saved = localStorage.getItem('math103Progress');
+            const saved = localStorage.getItem('math103ProgressV2');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state.answers = parsed.answers || {};
                 state.evaluated = parsed.evaluated || {};
                 state.globalScore = parsed.globalScore || { totalAttempted: 0, totalCorrect: 0 };
+                state.lastRoom = parsed.lastRoom || null;
+                state.scrollPositions = parsed.scrollPositions || {};
             }
-            // Initialize missing rooms
             Object.keys(examQuestions).forEach(roomId => {
                 if (!state.answers[roomId]) state.answers[roomId] = {};
                 if (typeof state.evaluated[roomId] === 'undefined') state.evaluated[roomId] = false;
@@ -542,21 +546,22 @@
         }
 
         function saveProgress() {
-            localStorage.setItem('math103Progress', JSON.stringify({
+            localStorage.setItem('math103ProgressV2', JSON.stringify({
                 answers: state.answers,
                 evaluated: state.evaluated,
-                globalScore: state.globalScore
+                globalScore: state.globalScore,
+                lastRoom: state.currentRoom,
+                scrollPositions: state.scrollPositions
             }));
         }
 
         function resetAllProgress() {
             if (confirm('هل أنت متأكد من إعادة تعيين كل التقدم؟')) {
-                localStorage.removeItem('math103Progress');
+                localStorage.removeItem('math103ProgressV2');
                 location.reload();
             }
         }
 
-        // --- إصلاح الخطأ: تعريف كافة العناصر المطلوبة من الصفحة ---
         const navContainer = document.getElementById('navbar-rooms-container');
         const formContainer = document.getElementById('exam-form');
         const roomBanner = document.getElementById('room-banner');
@@ -565,7 +570,6 @@
         const themeBtn = document.getElementById('theme-toggle');
         const globalScoreEl = document.getElementById('global-score');
         
-        // هذه هي المتغيرات التي كانت تتسبب في تحطم الكود (Script crash) لعدم تعريفها 
         const navPrev = document.getElementById('nav-prev');
         const navNext = document.getElementById('nav-next');
         const navCounter = document.getElementById('nav-counter');
@@ -574,6 +578,13 @@
         function fixLatexEscaping(str) {
             if (!str) return '';
             return str.replace(/\\\\/g, '\\');
+        }
+
+        function updateGlobalScoreUI() {
+            if (globalScoreEl) {
+                const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
+                globalScoreEl.innerText = `${perc}%`;
+            }
         }
 
         let isLight = false;
@@ -585,20 +596,46 @@
 
         function initApp() {
             loadProgress();
+            updateGlobalScoreUI();
             
-            Object.keys(examQuestions).forEach((roomId, index) => {
+            const firstRoom = Object.keys(examQuestions)[0];
+            const targetRoom = (state.lastRoom && examQuestions[state.lastRoom]) ? state.lastRoom : firstRoom;
+
+            Object.keys(examQuestions).forEach((roomId) => {
                 const btn = document.createElement('button');
-                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${index === 0 ? 'active' : ''}`;
+                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${roomId === targetRoom ? 'active' : ''}`;
                 btn.innerText = examQuestions[roomId].title;
                 btn.onclick = () => loadRoom(roomId, btn);
                 navContainer.appendChild(btn);
-                
-                if (index === 0) loadRoom(roomId, btn);
             });
+            
+            // Load the saved active tab
+            const activeBtn = Array.from(navContainer.children).find(b => b.classList.contains('active'));
+            loadRoom(targetRoom, activeBtn);
+        }
+
+        function renderExplanation(card, roomId, index, q) {
+            if (card.querySelector('.explanation-box')) return; // Already rendered
+            const expBox = document.createElement('div');
+            expBox.className = 'explanation-box mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
+            const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
+            
+            if (q.type === 'mcq' || q.type === 'tf') {
+                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">الشرح والتفسير:</strong> ${fixLatexEscaping(explanationText)}`;
+            } else if (q.type === 'subjective') {
+                expBox.className = 'explanation-box mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
+                expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">الإجابة النموذجية:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
+            }
+            card.appendChild(expBox);
+            
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise([expBox]).catch(err => console.error("MathJax Error:", err));
+            }
         }
 
         function loadRoom(roomId, btnElement) {
             state.currentRoom = roomId;
+            saveProgress();
             
             document.querySelectorAll('.room-tab').forEach(b => b.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
@@ -634,7 +671,10 @@
                 `;
                 card.appendChild(header);
 
+                const hasAnswered = state.answers[roomId][index] !== undefined;
+
                 if (q.type === 'mcq' || q.type === 'tf') {
+                    const isLocked = isEvaluated || hasAnswered; // Disable immediately if answered
                     const gridClass = q.type === 'tf' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2';
                     const optionsContainer = document.createElement('div');
                     optionsContainer.className = `grid ${gridClass} gap-3 mt-4`;
@@ -642,7 +682,7 @@
                     q.options.forEach((opt, optIndex) => {
                         const isChecked = state.answers[roomId][index] === optIndex;
                         const wrapper = document.createElement('label');
-                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative ${isEvaluated && isChecked ? 'ring-2 ring-indigo-500' : ''}`;
+                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative ${isChecked ? 'ring-2 ring-indigo-500' : ''}`;
                         
                         const input = document.createElement('input');
                         input.type = 'radio';
@@ -650,56 +690,68 @@
                         input.value = optIndex;
                         input.className = 'hidden';
                         input.checked = isChecked;
-                        input.disabled = isEvaluated;
+                        input.disabled = isLocked;
                         
-                        // Immediate feedback on change
-                        input.addEventListener('change', () => {
-                            state.answers[roomId][index] = optIndex;
-                            saveProgress();
-                            updateProgress();
-                            
-                            // Immediate visual feedback
-                            if (!isEvaluated) {
-                                // Reset all options in this question
-                                wrapper.parentElement.querySelectorAll('.option-wrapper').forEach(w => {
-                                    w.classList.remove('correct', 'incorrect');
-                                });
-                                
-                                // Mark current selection
-                                if (optIndex === q.correct) {
-                                    wrapper.classList.add('correct');
-                                } else {
-                                    wrapper.classList.add('incorrect');
-                                }
-                            }
-                        });
-
-                        const processedOpt = fixLatexEscaping(opt);
-
-                        const textDiv = document.createElement('div');
-                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
-                        textDiv.innerHTML = processedOpt;
-                        
-                        if (isEvaluated) {
-                            if (optIndex === q.correct) {
-                                wrapper.classList.add('badge-pass');
-                            } else if (isChecked && optIndex !== q.correct) {
-                                wrapper.classList.add('badge-fail');
-                            }
-                        } else if (isChecked) {
-                            // Show immediate feedback even if not fully evaluated
+                        if (isLocked) {
+                            wrapper.classList.remove('cursor-pointer');
+                            wrapper.classList.add('locked');
                             if (optIndex === q.correct) {
                                 wrapper.classList.add('correct');
-                            } else {
+                            } else if (isChecked && optIndex !== q.correct) {
                                 wrapper.classList.add('incorrect');
                             }
                         }
+
+                        input.addEventListener('change', () => {
+                            if (state.answers[roomId][index] !== undefined) return; // double check
+
+                            state.answers[roomId][index] = optIndex;
+                            
+                            // 1. Evaluate immediately for the global score
+                            if (optIndex === q.correct) {
+                                state.globalScore.totalCorrect++;
+                            }
+                            state.globalScore.totalAttempted++;
+                            
+                            // 2. Lock and Update visual UI directly
+                            const allWrappers = optionsContainer.querySelectorAll('.option-wrapper');
+                            allWrappers.forEach((w, idx) => {
+                                const inp = w.querySelector('input');
+                                if(inp) inp.disabled = true;
+                                w.classList.remove('cursor-pointer');
+                                w.classList.add('locked');
+                                
+                                if (idx === q.correct) {
+                                    w.classList.add('correct'); // Show the right answer in green
+                                } else if (idx === optIndex) {
+                                    w.classList.add('incorrect'); // Show their wrong answer in red
+                                }
+                            });
+                            
+                            // 3. Show explanation instantly
+                            renderExplanation(card, roomId, index, q);
+                            
+                            saveProgress();
+                            updateProgress();
+                            updateGlobalScoreUI();
+                        });
+
+                        const processedOpt = fixLatexEscaping(opt);
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
+                        textDiv.innerHTML = processedOpt;
 
                         wrapper.appendChild(input);
                         wrapper.appendChild(textDiv);
                         optionsContainer.appendChild(wrapper);
                     });
+                    
                     card.appendChild(optionsContainer);
+                    
+                    // Show explanation on load if it was already answered
+                    if (isLocked) {
+                        renderExplanation(card, roomId, index, q);
+                    }
                     
                 } else if (q.type === 'subjective') {
                     const textArea = document.createElement('textarea');
@@ -714,26 +766,16 @@
                         updateProgress();
                     });
                     card.appendChild(textArea);
-                }
-
-                if (isEvaluated) {
-                    const expBox = document.createElement('div');
-                    const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
                     
-                    if (q.type === 'mcq' || q.type === 'tf') {
-                        expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
-                        expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${fixLatexEscaping(explanationText)}`;
-                    } else if (q.type === 'subjective') {
-                        expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
-                        expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
+                    // Only show explanation for subjective if the whole room is evaluated
+                    if (isEvaluated) {
+                        renderExplanation(card, roomId, index, q);
                     }
-                    card.appendChild(expBox);
                 }
 
                 formContainer.appendChild(card);
             });
 
-            // تأمين ضد استدعاء MathJax قبل أن يحمل بالكامل
             if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                 MathJax.typesetPromise([formContainer]).catch(err => console.error("MathJax Error:", err));
             }
@@ -741,6 +783,15 @@
             updateSubmitUI();
             updateProgress();
             setupIntersectionObserver();
+            
+            // Restore scroll position for this room
+            setTimeout(() => {
+                const savedIndex = state.scrollPositions?.[roomId] || 0;
+                const targetCard = document.getElementById(`qcard-${savedIndex}`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
         }
 
         submitBtn.addEventListener('click', () => {
@@ -748,32 +799,25 @@
             if (state.evaluated[roomId]) return;
             
             const questions = examQuestions[roomId].questions;
-            let correct = 0;
-            let totalObjective = 0;
-
+            
             questions.forEach((q, index) => {
                 if (q.type === 'mcq' || q.type === 'tf') {
-                    totalObjective++;
-                    if (state.answers[roomId][index] === q.correct) {
-                        correct++;
-                        state.globalScore.totalCorrect++;
+                    // Evaluate unanswered MCQ as wrong
+                    if (state.answers[roomId][index] === undefined) {
+                        state.globalScore.totalAttempted++;
                     }
-                    state.globalScore.totalAttempted++;
                 }
             });
 
             state.evaluated[roomId] = true;
             saveProgress();
-            
-            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
-            globalScoreEl.innerText = `${perc}%`;
+            updateGlobalScoreUI();
 
             loadRoom(roomId, document.querySelector('.room-tab.active'));
 
             roomBanner.innerHTML = `
                 <h2 class="text-2xl font-bold gradient-text mb-2">Room Completed!</h2>
-                <p class="text-[var(--text-main)]">You scored <strong>${correct}</strong> out of <strong>${totalObjective}</strong> strictly evaluated items.</p>
-                <p class="text-xs text-[var(--text-muted)] mt-2">Subjective responses have been unlocked with ideal grading keys for self-assessment.</p>
+                <p class="text-[var(--text-main)]">Your global score is updated. Check missed questions and explanations below.</p>
             `;
             roomBanner.classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -818,6 +862,13 @@
                     if (entry.isIntersecting) {
                         const id = entry.target.id;
                         currentScrollIndex = parseInt(id.replace('qcard-', ''));
+                        
+                        // Save scroll position for refresh persistence
+                        if(state.currentRoom) {
+                            state.scrollPositions[state.currentRoom] = currentScrollIndex;
+                            saveProgress();
+                        }
+                        
                         updateProgress();
                     }
                 });
