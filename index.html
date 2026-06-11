@@ -39,7 +39,7 @@
             }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
     <style>
         :root {
@@ -176,15 +176,15 @@
 
     <div class="px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
         <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth">
-            </div>
+        </div>
     </div>
 
     <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-32">
         <div id="room-banner" class="hidden glass-panel rounded-2xl p-6 mb-8 text-center fade-in">
-            </div>
+        </div>
 
         <form id="exam-form" class="space-y-6">
-            </form>
+        </form>
 
         <div id="submit-container" class="hidden mt-10 flex justify-end">
             <button type="button" id="submit-exam-btn" class="px-8 py-4 rounded-xl text-white font-bold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all transform hover:-translate-y-1" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
@@ -221,9 +221,9 @@
 
     <script>
         // =====================================================================
-        // 1. قاعدة بيانات الأسئلة (unchanged)
+        // 1. قاعدة بيانات الأسئلة
         // =====================================================================
- const examQuestions = {
+        const examQuestions = {
             "room_5": {
                 title: "Solved Problems IT - Statistics",
                 questions: [
@@ -556,6 +556,7 @@
             }
         }
 
+        // --- إصلاح الخطأ: تعريف كافة العناصر المطلوبة من الصفحة ---
         const navContainer = document.getElementById('navbar-rooms-container');
         const formContainer = document.getElementById('exam-form');
         const roomBanner = document.getElementById('room-banner');
@@ -563,6 +564,12 @@
         const submitBtn = document.getElementById('submit-exam-btn');
         const themeBtn = document.getElementById('theme-toggle');
         const globalScoreEl = document.getElementById('global-score');
+        
+        // هذه هي المتغيرات التي كانت تتسبب في تحطم الكود (Script crash) لعدم تعريفها 
+        const navPrev = document.getElementById('nav-prev');
+        const navNext = document.getElementById('nav-next');
+        const navCounter = document.getElementById('nav-counter');
+        const navProgress = document.getElementById('nav-progress');
 
         function fixLatexEscaping(str) {
             if (!str) return '';
@@ -726,7 +733,10 @@
                 formContainer.appendChild(card);
             });
 
-            MathJax.typesetPromise([formContainer]);
+            // تأمين ضد استدعاء MathJax قبل أن يحمل بالكامل
+            if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise([formContainer]).catch(err => console.error("MathJax Error:", err));
+            }
             
             updateSubmitUI();
             updateProgress();
@@ -783,6 +793,8 @@
         let currentScrollIndex = 0;
         function updateProgress() {
             const roomId = state.currentRoom;
+            if (!roomId || !examQuestions[roomId]) return;
+
             const total = examQuestions[roomId].questions.length;
             if(total === 0) return;
             
@@ -791,8 +803,10 @@
                 return val !== undefined && val !== '';
             }).length;
             
-            navCounter.innerText = `Question ${currentScrollIndex + 1} / ${total}`;
-            navProgress.style.width = `${(answered / total) * 100}%`;
+            if (navCounter && navProgress) {
+                navCounter.innerText = `Question ${currentScrollIndex + 1} / ${total}`;
+                navProgress.style.width = `${(answered / total) * 100}%`;
+            }
         }
 
         function setupIntersectionObserver() {
@@ -812,18 +826,22 @@
             cards.forEach(card => observer.observe(card));
         }
 
-        navPrev.addEventListener('click', () => {
-            if (currentScrollIndex > 0) {
-                document.getElementById(`qcard-${currentScrollIndex - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+        if (navPrev) {
+            navPrev.addEventListener('click', () => {
+                if (currentScrollIndex > 0) {
+                    document.getElementById(`qcard-${currentScrollIndex - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        }
 
-        navNext.addEventListener('click', () => {
-            const total = examQuestions[state.currentRoom].questions.length;
-            if (currentScrollIndex < total - 1) {
-                document.getElementById(`qcard-${currentScrollIndex + 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+        if (navNext) {
+            navNext.addEventListener('click', () => {
+                const total = examQuestions[state.currentRoom].questions.length;
+                if (currentScrollIndex < total - 1) {
+                    document.getElementById(`qcard-${currentScrollIndex + 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
