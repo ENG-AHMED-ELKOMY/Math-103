@@ -167,7 +167,7 @@
             </div>
     </div>
 
-    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-32">
+    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-10">
         <form id="exam-form" class="space-y-6">
             </form>
 
@@ -177,23 +177,6 @@
             </button>
         </div>
     </main>
-
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
-        <button id="nav-prev" class="text-[var(--text-muted)] hover:text-[var(--accent-indigo)] transition-colors p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-        </button>
-        
-        <div class="flex-grow mx-6 flex flex-col items-center">
-            <span id="nav-counter" class="text-sm font-bold tracking-wide mb-1">Question 0 / 0</span>
-            <div class="w-full bg-[var(--bg-body)] h-2 rounded-full overflow-hidden border border-[var(--border-color)]">
-                <div id="nav-progress" class="h-full rounded-full transition-all duration-500 ease-out" style="width: 0%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-emerald));"></div>
-            </div>
-        </div>
-
-        <button id="nav-next" class="text-[var(--text-muted)] hover:text-[var(--accent-emerald)] transition-colors p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </button>
-    </div>
 
     <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div class="text-sm font-semibold text-[var(--text-muted)] tracking-wide">
@@ -502,14 +485,14 @@
         };
 
         // =====================================================================
-        // 3. App Logic (Instant Feedback & LocalStorage)
+        // 3. App Logic (Instant Feedback & LocalStorage Fix)
         // =====================================================================
         const STORAGE_KEY = 'math103_exam_progress';
 
         let state = {
             currentRoom: null,
             answers: {},      
-            questionEvaluated: {}, // New: Track per-question evaluation
+            questionEvaluated: {},
             globalScore: { totalAttempted: 0, totalCorrect: 0 }
         };
 
@@ -517,22 +500,29 @@
         const formContainer = document.getElementById('exam-form');
         const themeBtn = document.getElementById('theme-toggle');
         const globalScoreEl = document.getElementById('global-score');
-        const navPrev = document.getElementById('nav-prev');
-        const navNext = document.getElementById('nav-next');
-        const navCounter = document.getElementById('nav-counter');
-        const navProgress = document.getElementById('nav-progress');
         const resetBtn = document.getElementById('reset-exam-btn');
 
+        // حل مشكلة الريفرش: دمج الداتا المحفوظة مع الغرف الجديدة
         function loadProgress() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
-                state = JSON.parse(saved);
-            } else {
-                Object.keys(examQuestions).forEach(roomId => {
-                    state.answers[roomId] = {};
-                    state.questionEvaluated[roomId] = {};
-                });
+                try {
+                    state = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Error parsing saved state.");
+                }
             }
+            
+            // التأكد من أن كل الغرف الحالية موجودة في المتغيرات حتى لو لم تكن محفوظة مسبقاً
+            Object.keys(examQuestions).forEach(roomId => {
+                if (!state.answers) state.answers = {};
+                if (!state.questionEvaluated) state.questionEvaluated = {};
+                
+                if (!state.answers[roomId]) state.answers[roomId] = {};
+                if (!state.questionEvaluated[roomId]) state.questionEvaluated[roomId] = {};
+            });
+            
+            if (!state.globalScore) state.globalScore = { totalAttempted: 0, totalCorrect: 0 };
         }
 
         function saveProgress() {
@@ -560,19 +550,30 @@
             loadProgress();
             updateLiveScore();
 
+            // تحديد الغرفة المراد تحميلها عند فتح الصفحة
+            let roomToLoad = state.currentRoom || Object.keys(examQuestions)[0];
+            let btnToClick = null;
+
             Object.keys(examQuestions).forEach((roomId, index) => {
                 const btn = document.createElement('button');
-                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${index === 0 ? 'active' : ''}`;
+                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border`;
                 btn.innerText = examQuestions[roomId].title;
                 btn.onclick = () => loadRoom(roomId, btn);
                 navContainer.appendChild(btn);
                 
-                if (index === 0) loadRoom(roomId, btn);
+                if (roomId === roomToLoad) {
+                    btnToClick = btn;
+                }
             });
+            
+            if (btnToClick) {
+                loadRoom(roomToLoad, btnToClick);
+            }
         }
 
         function loadRoom(roomId, btnElement) {
             state.currentRoom = roomId;
+            saveProgress(); // حفظ الغرفة الحالية في حالة الريفرش
             
             document.querySelectorAll('.room-tab').forEach(b => b.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
@@ -627,10 +628,10 @@
                         input.checked = isChecked;
                         input.disabled = isEvaluated;
                         
-                        // Instant Feedback Logic
+                        // التصحيح الفوري (Instant Feedback)
                         if (!isEvaluated) {
                             input.addEventListener('change', () => {
-                                if(state.questionEvaluated[roomId][index]) return;
+                                if(state.questionEvaluated[roomId][index]) return; // منع التغيير لو اتحل
                                 
                                 state.answers[roomId][index] = optIndex;
                                 state.questionEvaluated[roomId][index] = true;
@@ -654,7 +655,6 @@
                                 appendExplanation(card, roomId, index, q);
                                 
                                 saveProgress();
-                                updateProgress();
                             });
                         }
 
@@ -663,7 +663,7 @@
                         textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
                         textDiv.innerHTML = processedOpt;
                         
-                        // Render loaded state
+                        // Render loaded state (لو كان محلول قبل كده والصفحة اتعملها ريفرش)
                         if (isEvaluated) {
                             if (optIndex === q.correct) {
                                 wrapper.classList.add('badge-pass');
@@ -689,7 +689,6 @@
                         textArea.addEventListener('input', (e) => {
                             state.answers[roomId][index] = e.target.value;
                             saveProgress();
-                            updateProgress();
                         });
 
                         const showAnsBtn = document.createElement('button');
@@ -703,7 +702,6 @@
                             showAnsBtn.remove();
                             appendExplanation(card, roomId, index, q);
                             saveProgress();
-                            updateProgress();
                         };
                         card.appendChild(showAnsBtn);
                     }
@@ -717,8 +715,6 @@
             });
 
             MathJax.typesetPromise([formContainer]);
-            updateProgress();
-            setupIntersectionObserver();
         }
 
         function appendExplanation(card, roomId, index, q) {
@@ -736,56 +732,11 @@
             MathJax.typesetPromise([expBox]);
         }
 
-        // Reset Exam Functionality
+        // مسح التقدم (Reset Progress)
         resetBtn.addEventListener('click', () => {
             if(confirm('هل أنت متأكد أنك تريد مسح جميع إجاباتك وإعادة البدء من جديد؟')) {
                 localStorage.removeItem(STORAGE_KEY);
                 location.reload();
-            }
-        });
-
-        let currentScrollIndex = 0;
-        function updateProgress() {
-            const roomId = state.currentRoom;
-            const total = examQuestions[roomId].questions.length;
-            if(total === 0) return;
-            
-            const answered = Object.keys(state.answers[roomId]).filter(k => {
-                const val = state.answers[roomId][k];
-                return val !== undefined && val !== '';
-            }).length;
-            
-            navCounter.innerText = `Question ${currentScrollIndex + 1} / ${total}`;
-            navProgress.style.width = `${(answered / total) * 100}%`;
-        }
-
-        function setupIntersectionObserver() {
-            const cards = document.querySelectorAll('.question-card');
-            const options = { root: null, rootMargin: '0px', threshold: 0.5 };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.id;
-                        currentScrollIndex = parseInt(id.replace('qcard-', ''));
-                        updateProgress();
-                    }
-                });
-            }, options);
-
-            cards.forEach(card => observer.observe(card));
-        }
-
-        navPrev.addEventListener('click', () => {
-            if (currentScrollIndex > 0) {
-                document.getElementById(`qcard-${currentScrollIndex - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-
-        navNext.addEventListener('click', () => {
-            const total = examQuestions[state.currentRoom].questions.length;
-            if (currentScrollIndex < total - 1) {
-                document.getElementById(`qcard-${currentScrollIndex + 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
 
