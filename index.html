@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Premium Math103 Exam Portal</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -118,7 +118,7 @@
             border-color: #ef4444 !important;
             background: rgba(239, 68, 68, 0.1) !important;
         }
-        .disabled { cursor: not-allowed !important; }
+        .disabled { cursor: not-allowed !important; opacity: 0.9; }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
@@ -136,53 +136,76 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* تحسينات الموبايل - لف النصوص */
+        .question-text {
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        
+        .option-text {
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 640px) {
+            .glass-panel {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .option-wrapper {
+                padding: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen relative flex flex-col">
 
-    <header class="sticky top-0 z-40 glass-panel border-b border-l-0 border-r-0 border-t-0 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="h-10 w-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+    <header class="sticky top-0 z-40 glass-panel border-b border-l-0 border-r-0 border-t-0 px-4 sm:px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight">Math103 Portal</h1>
+                <h1 class="text-lg sm:text-xl font-bold tracking-tight">Math103 Portal</h1>
                 <p class="text-xs text-[var(--text-muted)]">Probability & Statistics</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3 sm:gap-6">
             <div class="hidden sm:flex flex-col items-end">
                 <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Live Score</span>
                 <span id="global-score" class="text-2xl font-bold gradient-text">0%</span>
             </div>
-            <button id="theme-toggle" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+            <button id="theme-toggle" class="glass-panel px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
                 🌙 Dark
             </button>
         </div>
     </header>
 
-    <div class="px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
-        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth">
+    <div class="px-3 sm:px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
+        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-2 sm:space-x-3 pb-2 scroll-smooth">
             </div>
     </div>
 
-    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-10">
-        <form id="exam-form" class="space-y-6">
+    <main class="flex-grow p-3 sm:p-4 max-w-4xl mx-auto w-full mb-10">
+        <form id="exam-form" class="space-y-4 sm:space-y-6">
             </form>
 
-        <div class="mt-10 flex justify-center">
-            <button type="button" id="reset-exam-btn" class="px-6 py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
+        <div class="mt-8 sm:mt-10 flex justify-center">
+            <button type="button" id="reset-exam-btn" class="px-4 py-2 sm:px-6 sm:py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
                 🗑️ مسح التقدم وإعادة البدء (Reset Progress)
             </button>
         </div>
     </main>
 
-    <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-        <div class="text-sm font-semibold text-[var(--text-muted)] tracking-wide">
+    <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-4 sm:py-6 px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div class="text-xs sm:text-sm font-semibold text-[var(--text-muted)] tracking-wide">
             Minia University - Faculty of Science
         </div>
-        <div class="text-sm font-bold tracking-widest gradient-text">
+        <div class="text-xs sm:text-sm font-bold tracking-widest gradient-text">
             ENG: AHMED ABO ANWER <span class="text-[var(--text-muted)] mx-2">|</span> ENG: HAMZA KAFAFI
         </div>
     </footer>
@@ -202,11 +225,11 @@
                   { type: "mcq", text: "Best measure for data: 10,20,20,30,35,40,400:", options: ["Mean", "Variance", "Range", "Median"], correct: 3 },
                   { type: "mcq", text: "UV-B: weak, moderate, strong, extreme. Best measure:", options: ["Mean", "Median", "Mode", "Mode and Median"], correct: 3 },
                   { type: "mcq", text: "CV=58%, sd=21.2, mean =", options: ["36.6", "34.8", "24.4", "None"], correct: 0 },
-                  { type: "mcq", text: "$\\\\sum x_i = 20$, $\\\\bar{x}=2$, rank of median =", options: ["2", "5", "6", "5,6"], correct: 1 },
-                  { type: "mcq", text: "$\\\\sum x_i^2=1530$, n=10 (population), $\\\\bar{x}=12$, CV =", options: ["36%", "41%", "25%", "None"], correct: 2 },
+                  { type: "mcq", text: "$\\sum x_i = 20$, $\\bar{x}=2$, rank of median =", options: ["2", "5", "6", "5,6"], correct: 1 },
+                  { type: "mcq", text: "$\\sum x_i^2=1530$, n=10 (population), $\\bar{x}=12$, CV =", options: ["36%", "41%", "25%", "None"], correct: 2 },
                   { type: "mcq", text: "Class of 100 students, 80 boys avg=70, class avg=72, girls avg =", options: ["80", "71.5", "68", "67.5"], correct: 0 },
                   { type: "mcq", text: "For a given set of data there is:", options: ["One and only one mean", "One and only one median", "One or more modes", "All preceding"], correct: 3 },
-                  { type: "mcq", text: "$\\\\sum x_i = 40$, standard error=0.3, variance=9, mean =", options: ["0.2", "0.9", "0.3", "0.4"], correct: 0 },
+                  { type: "mcq", text: "$\\sum x_i = 40$, standard error=0.3, variance=9, mean =", options: ["0.2", "0.9", "0.3", "0.4"], correct: 0 },
                   { type: "mcq", text: "Coefficient of range for data: 1400,1450,1520,1380,1485,1495,1575,1440", options: ["0.066", "0.072", "0.082", "0.092"], correct: 0 },
                   { type: "mcq", text: "Mean of 100 items=49, three items 60,70,80 wrongly read as 40,20,50. Correct mean =", options: ["50", "48", "82.5", "80"], correct: 1 },
                   { type: "mcq", text: "Characteristics that vary from one individual to another are:", options: ["Constants", "Variables", "Sample", "Population"], correct: 1 },
@@ -227,7 +250,7 @@
             "room_4": {
                 title: "Assignment IT - Statistics",
                 questions: [
-                  { type: "subjective", text: "Complete the table and find mean, variance, standard deviation from sample data: x = 6,10,12,13,15,20,24,28,30,32. Given $\\\\sum x=190$, find $\\\\sum (x_i-\\\\bar{x})^2$." },
+                  { type: "subjective", text: "Complete the table and find mean, variance, standard deviation from sample data: x = 6,10,12,13,15,20,24,28,30,32. Given $\\sum x=190$, find $\\sum (x_i-\\bar{x})^2$." },
                   { type: "subjective", text: "Temperature (X): 2,4,6,8,10,12,14,16,18 and Heart rate (Y): 5,11,11,14,22,23,32,29,32. a) Find regression line of Y on X. b) Predict heart rate at X=20. c) Calculate correlation coefficient." },
                   { type: "mcq", text: "Regression equation $y = 31.9 - 0.34x$. If return rate decreases by 1%, immigration rate will:", options: ["increase by 0.34%", "increase by 3.4%", "decrease by 0.34%", "decrease by 3.4%"], correct: 0 },
                   { type: "mcq", text: "In simple regression equation, the number of constants involved are:", options: ["1", "2", "0", "3"], correct: 1 },
@@ -242,35 +265,35 @@
             "room_3": {
                 title: "Solved Problem 1 - Probability & Statistics",
                 questions: [
-                  { type: "mcq", text: "If $A \\\\subset B$, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
-                  { type: "mcq", text: "If the knowledge that event A has occurred implies that event B cannot occur, the events A and B are said to be:", options: ["Independent", "Mutually exclusive", "$A \\\\subset B$", "$B \\\\subset A$"], correct: 1 },
+                  { type: "mcq", text: "If $A \\subset B$, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
+                  { type: "mcq", text: "If the knowledge that event A has occurred implies that event B cannot occur, the events A and B are said to be:", options: ["Independent", "Mutually exclusive", "$A \\subset B$", "$B \\subset A$"], correct: 1 },
                   { type: "mcq", text: "If A and B are independent events in a sample space S, which of the following statement(s) are true?", options: ["A and $B^c$ are independent", "B and $A^c$ are independent", "A and $B^c$ are independent", "All of preceding"], correct: 3 },
-                  { type: "mcq", text: "A code consists of a digit chosen from 0 to 6 followed by a letter of the alphabet. What is the probability the code is 6Z?", options: ["$\\\\frac{1}{260}$", "$\\\\frac{1}{156}$", "$\\\\frac{1}{182}$", "None of them"], correct: 2 },
+                  { type: "mcq", text: "A code consists of a digit chosen from 0 to 6 followed by a letter of the alphabet. What is the probability the code is 6Z?", options: ["$\\frac{1}{260}$", "$\\frac{1}{156}$", "$\\frac{1}{182}$", "None of them"], correct: 2 },
                   { type: "mcq", text: "If A and B are independent, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
-                  { type: "mcq", text: "If $B \\\\subset A$, then $P(B|A) =$", options: ["$P(A|B)$", "$P(A)$", "$P(B)$", "None of them"], correct: 2 },
-                  { type: "mcq", text: "If $P(A)=\\\\frac14, P(B)=\\\\frac13, P(A\\\\cap B)=\\\\frac13$, then $P(A|B) =$", options: ["$\\\\frac14$", "$\\\\frac12$", "$\\\\frac13$", "None of them"], correct: 0 },
+                  { type: "mcq", text: "If $B \\subset A$, then $P(B|A) =$", options: ["$P(A|B)$", "$P(A)$", "$P(B)$", "None of them"], correct: 2 },
+                  { type: "mcq", text: "If $P(A)=\\frac14, P(B)=\\frac13, P(A\\cap B)=\\frac13$, then $P(A|B) =$", options: ["$\\frac14$", "$\\frac12$", "$\\frac13$", "None of them"], correct: 0 },
                   { type: "mcq", text: "If $A = B$, then $P(A|B) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 1 },
                   { type: "mcq", text: "At a dental office, P(cleaning)=0.72, P(filling)=0.44, independent. P(filling | cleaning) =", options: ["0.44", "0.72", "Additional information required", "0.32", "0.66"], correct: 0 },
-                  { type: "subjective", text: "Given $P(A)=0.3, P(B)=0.2, P(A\\\\cap B)=0.1$. Find: (a) $P(A^c)$ (b) $P(A\\\\cup B)$ (c) $P(A^c\\\\cap B)$ (d) $P(A\\\\cap B^c)$ (e) $P(A\\\\cup B)^c$ (f) $P(A^c\\\\cup B)$" },
+                  { type: "subjective", text: "Given $P(A)=0.3, P(B)=0.2, P(A\\cap B)=0.1$. Find: (a) $P(A^c)$ (b) $P(A\\cup B)$ (c) $P(A^c\\cap B)$ (d) $P(A\\cap B^c)$ (e) $P(A\\cup B)^c$ (f) $P(A^c\\cup B)$" },
                   { type: "subjective", text: "A bag contains 5 red, 4 green, 1 blue marbles. Two marbles chosen without replacement. Probability both are green?" },
                   { type: "subjective", text: "In Exton School, 60% of boys play baseball, 24% play baseball and football. What percent of those that play baseball also play football?" },
                   { type: "subjective", text: "A box contains 5 green and 7 yellow pencils. Two chosen without replacement. Probability both are yellow?" },
                   { type: "subjective", text: "A code consists of a digit 0-9 followed by a letter. Probability code is 9Z?" },
                   { type: "subjective", text: "Show that if A and B are independent, then so are (a) A and $B^c$ (b) A and B (c) A and $B^c$" },
-                  { type: "mcq", text: "For $f(x)=k(x^2+1), 0\\\\leq x\\\\leq 1$, value of k is:", options: ["$\\\\frac34$", "$\\\\frac54$", "$\\\\frac43$", "$\\\\frac45$"], correct: 2 },
-                  { type: "mcq", text: "For PMF $P(x)=\\\\frac{2x}{k}, x=1,2,3,4$, value of k is:", options: ["10", "20", "$\\\\frac{1}{10}$", "$\\\\frac{1}{20}$"], correct: 1 },
-                  { type: "mcq", text: "If $V(X)=3$, then $V(\\\\frac{X}{3}-5) =$", options: ["$\\\\frac13$", "$3$", "$27$", "$\\\\frac{1}{27}$"], correct: 0 },
-                  { type: "mcq", text: "$E(aX+b) =$", options: ["$a^2E(X+b)$", "$aE(X)$", "$\\\\frac{aE(X)+b}{aE(X)+b}$", "None of them"], correct: 3 },
-                  { type: "mcq", text: "If $f(x)$ is continuous pdf on $0\\\\leq x\\\\leq 5$, then $P(X=3)=$", options: ["0", "3", "2", "0.2"], correct: 0 },
+                  { type: "mcq", text: "For $f(x)=k(x^2+1), 0\\leq x\\leq 1$, value of k is:", options: ["$\\frac34$", "$\\frac54$", "$\\frac43$", "$\\frac45$"], correct: 2 },
+                  { type: "mcq", text: "For PMF $P(x)=\\frac{2x}{k}, x=1,2,3,4$, value of k is:", options: ["10", "20", "$\\frac{1}{10}$", "$\\frac{1}{20}$"], correct: 1 },
+                  { type: "mcq", text: "If $V(X)=3$, then $V(\\frac{X}{3}-5) =$", options: ["$\\frac13$", "$3$", "$27$", "$\\frac{1}{27}$"], correct: 0 },
+                  { type: "mcq", text: "$E(aX+b) =$", options: ["$a^2E(X+b)$", "$aE(X)$", "$\\frac{aE(X)+b}{aE(X)+b}$", "None of them"], correct: 3 },
+                  { type: "mcq", text: "If $f(x)$ is continuous pdf on $0\\leq x\\leq 5$, then $P(X=3)=$", options: ["0", "3", "2", "0.2"], correct: 0 },
                   { type: "mcq", text: "100 students: 60 passed first, 50 passed second, 30 passed both. Probability passed at least one =", options: ["0.6", "0.8", "0.5", "0.3"], correct: 1 },
-                  { type: "subjective", text: "Complete: If $A-B=\\\\Phi$, then $P(A|B)=$ ?" },
-                  { type: "subjective", text: "Complete: If $P(A)=0.5, P(B^c)=0.5, P(A\\\\cap B)=0.25$, then $P(A|B)=$ ?" },
+                  { type: "subjective", text: "Complete: If $A-B=\\Phi$, then $P(A|B)=$ ?" },
+                  { type: "subjective", text: "Complete: If $P(A)=0.5, P(B^c)=0.5, P(A\\cap B)=0.25$, then $P(A|B)=$ ?" },
                   { type: "subjective", text: "Complete: If $P(A)=0.5, P(B|A)=1/3$, then $P(B^c|A)=$ ?" },
-                  { type: "subjective", text: "Complete: If $A\\\\subset B$, then $P(A^c|B)=$ ?" },
-                  { type: "subjective", text: "Given PMF table: x=-2,-1,0,1,2 with p(x)=0.2,0.4,k,0.2,0.1. Find k and (a) $P(X\\\\leq2)$ (b) $P(X>-2)$ (c) $P(-1\\\\leq X\\\\leq1)$ (d) $P(X\\\\leq-1 \\\\text{ or } X=2)$" },
-                  { type: "subjective", text: "Given pdf $f(x)=kx, 0\\\\leq x\\\\leq2$. (a) Find k. (b) $P(1\\\\leq X\\\\leq1.5)$ (c) $P(1.5\\\\leq X<3)$ (d) $P(X=1.5)$" },
+                  { type: "subjective", text: "Complete: If $A\\subset B$, then $P(A^c|B)=$ ?" },
+                  { type: "subjective", text: "Given PMF table: x=-2,-1,0,1,2 with p(x)=0.2,0.4,k,0.2,0.1. Find k and (a) $P(X\\leq2)$ (b) $P(X>-2)$ (c) $P(-1\\leq X\\leq1)$ (d) $P(X\\leq-1 \\text{ or } X=2)$" },
+                  { type: "subjective", text: "Given pdf $f(x)=kx, 0\\leq x\\leq2$. (a) Find k. (b) $P(1\\leq X\\leq1.5)$ (c) $P(1.5\\leq X<3)$ (d) $P(X=1.5)$" },
                   { type: "subjective", text: "Given PMF of messages per hour: x=10-15, p(x)=0.08,0.15,0.30,0.20,0.20,0.07. Find mean and standard deviation." },
-                  { type: "subjective", text: "Given pdf $f(x)=\\\\frac13 x^2, -1<x<2$. Find (1) $E(X), V(X), \\\\sigma$ (2) $E(3X+5), V(5X-2)$" },
+                  { type: "subjective", text: "Given pdf $f(x)=\\frac13 x^2, -1<x<2$. Find (1) $E(X), V(X), \\sigma$ (2) $E(3X+5), V(5X-2)$" },
                   { type: "subjective", text: "Binomial: n=5, p=0.02. (a) P(at least one defective) (b) P(exactly three defective)" },
                   { type: "subjective", text: "Binomial: n=10, p=0.6. (a) P(exactly 6 wins) (b) P(at most 2 wins)" }
                 ]
@@ -278,20 +301,20 @@
             "Math103_24_25": {
                 title: "Math103 24-25",
                 questions: [
-                    { type: "mcq", text: "If variance of $X$ is $\\\\frac{1}{3}$ then $V\\\\left(\\\\frac{X}{3}\\\\right) =$", options: ["$\\\\frac{1}{3}$", "$3$", "$\\\\frac{1}{27}$", "$27$"], correct: 2 },
+                    { type: "mcq", text: "If variance of $X$ is $\\frac{1}{3}$ then $V\\left(\\frac{X}{3}\\right) =$", options: ["$\\frac{1}{3}$", "$3$", "$\\frac{1}{27}$", "$27$"], correct: 2 },
                     { type: "mcq", text: "$E(aX + b) =$", options: ["$aE(X) + b$", "$aE(X)$", "$aE(X) - b$", "None of them"], correct: 0 },
-                    { type: "mcq", text: "If $A \\\\subset B$ then $P(B|A) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 2 },
-                    { type: "mcq", text: "If the knowledge that event A has occurred implies that event B cannot occur, A and B are:", options: ["Independent", "Mutually exclusive", "$A \\\\subset B$", "$B \\\\subset A$"], correct: 1 },
-                    { type: "mcq", text: "For $f(x) = k(x^3 + 1), 0 \\\\leq x \\\\leq 1$, the value of k is:", options: ["$\\\\frac{1}{2}$", "$\\\\frac{4}{3}$", "$\\\\frac{3}{4}$", "$\\\\frac{1}{3}$"], correct: 1 },
-                    { type: "mcq", text: "If $P(x) = \\\\frac{2x}{k}, x=1,2,3,4$, the value of k is:", options: ["10", "20", "$\\\\frac{1}{10}$", "$\\\\frac{1}{20}$"], correct: 1 },
+                    { type: "mcq", text: "If $A \\subset B$ then $P(B|A) =$", options: ["$P(B|A)$", "$P(A)$", "$P(B)$", "None of them"], correct: 2 },
+                    { type: "mcq", text: "If the knowledge that event A has occurred implies that event B cannot occur, A and B are:", options: ["Independent", "Mutually exclusive", "$A \\subset B$", "$B \\subset A$"], correct: 1 },
+                    { type: "mcq", text: "For $f(x) = k(x^3 + 1), 0 \\leq x \\leq 1$, the value of k is:", options: ["$\\frac{1}{2}$", "$\\frac{4}{3}$", "$\\frac{3}{4}$", "$\\frac{1}{3}$"], correct: 1 },
+                    { type: "mcq", text: "If $P(x) = \\frac{2x}{k}, x=1,2,3,4$, the value of k is:", options: ["10", "20", "$\\frac{1}{10}$", "$\\frac{1}{20}$"], correct: 1 },
                     { type: "mcq", text: "If standard deviation is 6 and each observation divided by 3, new sd =", options: ["4", "2", "3", "1"], correct: 1 },
                     { type: "mcq", text: "Best measure for data: 10,20,20,30,35,40,40:", options: ["Mean", "Variance", "Range", "Median"], correct: 3 },
                     { type: "mcq", text: "Best measure for UV-B intensity (weak,moderate,strong,extreme):", options: ["Mean", "Median", "Mode", "Mode and Median"], correct: 3 },
                     { type: "mcq", text: "Coefficient of variation 58%, sd=21.2, mean =", options: ["34.8", "24.4", "36.55", "None of these"], correct: 2 },
-                    { type: "mcq", text: "$\\\\sum x_i = 20$ and $\\\\overline{x}=4$, rank of median is:", options: ["5", "6", "5 and 6", "None"], correct: 2 },
+                    { type: "mcq", text: "$\\sum x_i = 20$ and $\\overline{x}=4$, rank of median is:", options: ["5", "6", "5 and 6", "None"], correct: 2 },
                     { type: "mcq", text: "Class of 100 students, 30 boys avg=70, class avg=72, girls avg =", options: ["80", "71.5", "68", "67.5"], correct: 0 },
                     { type: "mcq", text: "For a given set of data there is:", options: ["One and only one mean", "One and only one median", "One or more modes", "All preceding"], correct: 3 },
-                    { type: "mcq", text: "If $\\\\sum x_i = 30$, standard error=0.3, variance=0.4, mean =", options: ["0.2", "0.9", "0.3", "0.4"], correct: 0 },
+                    { type: "mcq", text: "If $\\sum x_i = 30$, standard error=0.3, variance=0.4, mean =", options: ["0.2", "0.9", "0.3", "0.4"], correct: 0 },
                     { type: "mcq", text: "Mean of 100 items is 49, three items 40,20,50 wrongly read as 60,70,80. Correct mean =", options: ["50", "48", "82.5", "80"], correct: 1 },
                     { type: "mcq", text: "Characteristics that vary from one individual to another are:", options: ["Constants", "Variables", "Sample", "Population"], correct: 1 },
                     { type: "mcq", text: "Which is NOT a measure of central tendency?", options: ["Mean", "Median", "Mode", "Range"], correct: 3 },
@@ -305,31 +328,31 @@
                     { type: "mcq", text: "Which has same mean, mode, median?", options: ["6,2,5,4,3,4,1", "4,2,2,1,3,2,3", "2,3,7,3,8,3,2", "4,3,4,3,4,6,4"], correct: 3 },
                     { type: "mcq", text: "Probability at least 1 boy in 4 children (p=0.5):", options: ["0.9375", "0.0625", "0.5362", "0.1501"], correct: 0 },
                     { type: "mcq", text: "For binomial, mean=10, variance=5, n =", options: ["10", "20", "30", "40"], correct: 1 },
-                    { type: "mcq", text: "If $f(x)$ continuous pdf on $0 \\\\leq x \\\\leq 5$, then $F(2.5) =$", options: ["3", "2", "0.5", "2.5"], correct: 2 },
+                    { type: "mcq", text: "If $f(x)$ continuous pdf on $0 \\leq x \\leq 5$, then $F(2.5) =$", options: ["3", "2", "0.5", "2.5"], correct: 2 },
                     { type: "mcq", text: "Regression $Y=5+2X$ implies:", options: ["For every unit increase in X, Y increases by 2", "Y will be 2 when X=5", "Y always equals X", "None"], correct: 0 },
                     { type: "mcq", text: "If A and B independent, which is true?", options: ["A and B independent", "B and A independent", "A and B independent", "All of preceding"], correct: 3 },
                     { type: "mcq", text: "Code: digit 0-7 then letter. Probability code is 72?", options: ["$1/182$", "$1/208$", "$1/280$", "$1/26$"], correct: 1 },
                     { type: "mcq", text: "Mode of data 2,2,3,3 is:", options: ["2", "3", "1", "2 and 3"], correct: 3 },
-                    { type: "mcq", text: "A and B independent, $P(A)=0.9$, $P(B)\\\\neq1$, $P(B|A)=$", options: ["$P(B)$", "$P(B)/P(A)$", "$P(B|A)/P(A)$", "$1-P(B)$"], correct: 0 },
+                    { type: "mcq", text: "A and B independent, $P(A)=0.9$, $P(B)\\neq1$, $P(B|A)=$", options: ["$P(B)$", "$P(B)/P(A)$", "$P(B|A)/P(A)$", "$1-P(B)$"], correct: 0 },
                     { type: "mcq", text: "Range of correlation coefficient r:", options: ["0 to 1", "-1 to 1", "-2 to 2", "None"], correct: 1 },
-                    { type: "mcq", text: "If A and B independent, $P(A|B)=$", options: ["$P(A)$", "$P(B)$", "$P(A \\\\cap B)$", "None"], correct: 0 }
+                    { type: "mcq", text: "If A and B independent, $P(A|B)=$", options: ["$P(A)$", "$P(B)$", "$P(A \\cap B)$", "None"], correct: 0 }
                 ]
             },
             "Math103_2024": {
                 title: "Math103 (2024) - Exam",
                 questions: [
-                    { type: "mcq", text: "The condition of Mutually exclusive events, is $P(A \\\\cap B) =$", options: ["$P(A) - P(B)$", "$P(A) + P(B)$", "$0$", "$P(A)*P(B)$"], correct: 2 },
-                    { type: "mcq", text: "If $P(x)$ is a probability mass function, then", options: ["$\\\\sum f(x) = 0$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 1$", "$\\\\int_{-\\\\infty}^{\\\\infty}f(x) = 0$", "$\\\\sum f(x) = 1$"], correct: 3 },
-                    { type: "mcq", text: "The correct formula for the P.m.f.of Poisson distribution is:", options: ["$p^{x}q^{1 - x}$", "$\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$", "$\\\\frac{1}{\\\\sqrt{2\\\\pi}} e^{-\\\\frac{1}{2} z^{2}}$", "$C_{n}^{x} p^{x} q^{n - x}$"], correct: 1 },
+                    { type: "mcq", text: "The condition of Mutually exclusive events, is $P(A \\cap B) =$", options: ["$P(A) - P(B)$", "$P(A) + P(B)$", "$0$", "$P(A)*P(B)$"], correct: 2 },
+                    { type: "mcq", text: "If $P(x)$ is a probability mass function, then", options: ["$\\sum f(x) = 0$", "$\\int_{-\\infty}^{\\infty}f(x) = 1$", "$\\int_{-\\infty}^{\\infty}f(x) = 0$", "$\\sum f(x) = 1$"], correct: 3 },
+                    { type: "mcq", text: "The correct formula for the P.m.f.of Poisson distribution is:", options: ["$p^{x}q^{1 - x}$", "$\\frac{e^{-\\lambda} \\lambda^{x}}{x!}$", "$\\frac{1}{\\sqrt{2\\pi}} e^{-\\frac{1}{2} z^{2}}$", "$C_{n}^{x} p^{x} q^{n - x}$"], correct: 1 },
                     { type: "mcq", text: "If A and B are independent events, then which of the following statement(s) are true?", options: ["A and $B^{c}$ are independent", "A and B are independent", "A and $B^{c}$ are independent", "All of preceding"], correct: 3 },
-                    { type: "mcq", text: "If $X$ follows the Poisson distribution, then the characteristics values are:", options: ["$np, npq, \\\\sqrt{npq}$", "$\\\\mu, \\\\sigma^{2}, \\\\sigma$", "$\\\\lambda, \\\\lambda, \\\\sqrt{\\\\lambda}$", "$X, \\\\mu, \\\\sigma$"], correct: 2 },
+                    { type: "mcq", text: "If $X$ follows the Poisson distribution, then the characteristics values are:", options: ["$np, npq, \\sqrt{npq}$", "$\\mu, \\sigma^{2}, \\sigma$", "$\\lambda, \\lambda, \\sqrt{\\lambda}$", "$X, \\mu, \\sigma$"], correct: 2 },
                     { type: "mcq", text: "If the correlation coefficient $r = 1$ , indicates:", options: ["No linear relationship", "A perfect positive linear relationship", "A negative linear relationship", "None of them"], correct: 1 },
-                    { type: "mcq", text: "The formula for calculating the mode in continuous data given as:", options: ["$\\\\frac{\\\\sum_{i = 1}^{n}x}{n}$", "$L + \\\\left(\\\\frac{D_{1}}{D_{1} + D_{2}}\\\\right)*h$", "$L + \\\\left(\\\\frac{N - C}{f_{m}}\\\\right)*h$", "None of them"], correct: 1 },
-                    { type: "mcq", text: "The Spearman rank correlation coefficient take the formula:", options: ["$\\\\frac{\\\\sum(x_i - \\\\overline{x})(y_i - \\\\overline{y})}{N S_x S_y}$", "$\\\\frac{\\\\sum x_i y_i - N\\\\overline{x}\\\\overline{y}}{\\\\sum x_i^2 - N\\\\overline{x}^2}$", "$1 - \\\\frac{6\\\\sum d_i^2}{n(n^2 - 1)}$", "None of them"], correct: 2 },
-                    { type: "mcq", text: "The Variance for population in a contiuous data given by:", options: ["$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})^{2}f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}|x_i - \\\\overline{x}|f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i - \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$", "$\\\\frac{\\\\sum_{i=1}^{n}(x_i + \\\\overline{x})f_i}{\\\\sum_{i=1}^{n}f_i}$"], correct: 0 },
+                    { type: "mcq", text: "The formula for calculating the mode in continuous data given as:", options: ["$\\frac{\\sum_{i = 1}^{n}x}{n}$", "$L + \\left(\\frac{D_{1}}{D_{1} + D_{2}}\\right)*h$", "$L + \\left(\\frac{N - C}{f_{m}}\\right)*h$", "None of them"], correct: 1 },
+                    { type: "mcq", text: "The Spearman rank correlation coefficient take the formula:", options: ["$\\frac{\\sum(x_i - \\overline{x})(y_i - \\overline{y})}{N S_x S_y}$", "$\\frac{\\sum x_i y_i - N\\overline{x}\\overline{y}}{\\sum x_i^2 - N\\overline{x}^2}$", "$1 - \\frac{6\\sum d_i^2}{n(n^2 - 1)}$", "None of them"], correct: 2 },
+                    { type: "mcq", text: "The Variance for population in a contiuous data given by:", options: ["$\\frac{\\sum_{i=1}^{n}(x_i - \\overline{x})^{2}f_i}{\\sum_{i=1}^{n}f_i}$", "$\\frac{\\sum_{i=1}^{n}|x_i - \\overline{x}|f_i}{\\sum_{i=1}^{n}f_i}$", "$\\frac{\\sum_{i=1}^{n}(x_i - \\overline{x})f_i}{\\sum_{i=1}^{n}f_i}$", "$\\frac{\\sum_{i=1}^{n}(x_i + \\overline{x})f_i}{\\sum_{i=1}^{n}f_i}$"], correct: 0 },
                     { type: "mcq", text: "One of these measures is considered as a measure of dispersion:", options: ["Mean", "Mode", "Median", "Range"], correct: 3 },
                     { type: "subjective", text: "Given the numbers: 8, 6.77, 2.59, and 37.03% (treat as 0.3703). Find: 1) Mean, Median, Mode. 2) Range, Variance, Standard deviation, Coefficient of variation." },
-                    { type: "subjective", text: "A continuous random variable X has probability function: $f(x) = k(x^3 + 1)$ for $0 \\\\leq x \\\\leq 1$, zero elsewhere. Find: a) The constant $k$. b) $P(1 \\\\leq X \\\\leq 2)$. c) $E[X]$, $V(X)$, and $\\\\sigma$. d) $E[5X + 3]$ and $V(3X - 7)$." },
+                    { type: "subjective", text: "A continuous random variable X has probability function: $f(x) = k(x^3 + 1)$ for $0 \\leq x \\leq 1$, zero elsewhere. Find: a) The constant $k$. b) $P(1 \\leq X \\leq 2)$. c) $E[X]$, $V(X)$, and $\\sigma$. d) $E[5X + 3]$ and $V(3X - 7)$." },
                     { type: "subjective", text: "The following table shows the first two grades of 6 students: X: 1, 2, 4, 6, 7, 10 and Y: 9, 6, 4, 1, 2, 8. i) Calculate Pearson correlation coefficient. ii) Find equation of regression line of Y on X." },
                     { type: "subjective", text: "The following data regarding marks in M224 and M208: M224: C, B, A, C, B, F, D, B and M208: C, B, A, D, C, D, C, A. Find Spearman rank correlation coefficient." }
                 ]
@@ -338,8 +361,8 @@
                 title: "Math103 (2023) Dr. Hossam",
                 questions: [
                     { type: "subjective", text: "a) Define: Mutually exclusive events; Independent events; Probability Axioms. b) A sample of four electronic components: Pr[0 defect]=0.6, Pr[1]=0.2, Pr[2]=0.04, Pr[3]=0.03, Pr[4]=0.01. i) Probability of at least three defective? ii) Probability of at most one defective?" },
-                    { type: "subjective", text: "a) Find G.M, A.M, median, mode, $\\\\sigma$, and C.V for the set: 25, 8, 15, 5, 7. b) Prove that $f(x) = C_n^x p^x q^{n-x}, x=0,1,...,n$ is a probability mass function; find the moment generating function and $\\\\sigma$." },
-                    { type: "subjective", text: "a) Prove that $f(x) = \\\\frac{1}{b-a}, a<x<b$ is a density function and find $E(x^7)$. b) A sample of 49 cars had mean 70 days, population sd = 7 days. Find the best point estimate of population mean and the 95% confidence interval ($z_{0.025}=1.96$)." },
+                    { type: "subjective", text: "a) Find G.M, A.M, median, mode, $\\sigma$, and C.V for the set: 25, 8, 15, 5, 7. b) Prove that $f(x) = C_n^x p^x q^{n-x}, x=0,1,...,n$ is a probability mass function; find the moment generating function and $\\sigma$." },
+                    { type: "subjective", text: "a) Prove that $f(x) = \\frac{1}{b-a}, a<x<b$ is a density function and find $E(x^7)$. b) A sample of 49 cars had mean 70 days, population sd = 7 days. Find the best point estimate of population mean and the 95% confidence interval ($z_{0.025}=1.96$)." },
                     { type: "subjective", text: "Given data for two tests: X: 9, 5, 3, 7, 11 and Y: 5, 6, 1, 9, 9. a) Calculate correlation coefficient between X and Y. b) Find equation of line of best fit. c) Find Y when X = 1.5." }
                 ]
             }
@@ -356,14 +379,14 @@
                 3: "The standard deviation scales by the absolute value of the multiplier. If each observation is divided by 6, the new standard deviation is $6 / 6 = 1$.",
                 4: "The dataset contains an extreme outlier (400). The median is resistant to such extreme outliers and best represents the true central tendency of this dataset.",
                 5: "For ordinal categorical data (like intensity classifications), the Median is generally the most mathematically appropriate and informative measure of central tendency.",
-                6: "The Coefficient of Variation formula is $CV = \\\\frac{\\\\sigma}{\\\\mu} \\\\times 100$. Plugging the values: $58 = \\\\frac{21.2}{\\\\mu} \\\\times 100 \\\\implies \\\\mu = \\\\frac{2120}{58} \\\\approx 36.55$ (closest to 36.6).",
-                7: "If the sum is 20 and the mean is 2, the number of items $n = \\\\frac{20}{2} = 10$. For an even number of items, the median's rank is between $\\\\frac{n}{2}$ and $\\\\frac{n}{2} + 1$, which is the 5th and 6th positions.",
-                8: "First find variance: $\\\\sigma^2 = \\\\frac{\\\\sum x^2}{n} - \\\\mu^2 = \\\\frac{1530}{10} - 12^2 = 153 - 144 = 9$. Thus, $\\\\sigma = 3$. Then $CV = \\\\frac{3}{12} \\\\times 100 = 25\\\\%$.",
-                9: "Total class marks = $100 \\\\times 72 = 7200$. Total boys' marks = $80 \\\\times 70 = 5600$. Total girls' marks = $7200 - 5600 = 1600$. Average for the 20 girls = $\\\\frac{1600}{20} = 80$.",
+                6: "The Coefficient of Variation formula is $CV = \\frac{\\sigma}{\\mu} \\times 100$. Plugging the values: $58 = \\frac{21.2}{\\mu} \\times 100 \\implies \\mu = \\frac{2120}{58} \\approx 36.55$ (closest to 36.6).",
+                7: "If the sum is 20 and the mean is 2, the number of items $n = \\frac{20}{2} = 10$. For an even number of items, the median's rank is between $\\frac{n}{2}$ and $\\frac{n}{2} + 1$, which is the 5th and 6th positions.",
+                8: "First find variance: $\\sigma^2 = \\frac{\\sum x^2}{n} - \\mu^2 = \\frac{1530}{10} - 12^2 = 153 - 144 = 9$. Thus, $\\sigma = 3$. Then $CV = \\frac{3}{12} \\times 100 = 25\\%$.",
+                9: "Total class marks = $100 \\times 72 = 7200$. Total boys' marks = $80 \\times 70 = 5600$. Total girls' marks = $7200 - 5600 = 1600$. Average for the 20 girls = $\\frac{1600}{20} = 80$.",
                 10: "A numerical dataset mathematically possesses exactly one distinct mean and one distinct median, but it can be bimodal or multimodal (having multiple modes).",
-                11: "Standard error = $\\\\frac{\\\\sigma}{\\\\sqrt{n}} = 0.3$. Variance = 9, so $\\\\sigma = 3$. Therefore, $\\\\frac{3}{\\\\sqrt{n}} = 0.3 \\\\implies n = 100$. The Mean = $\\\\frac{\\\\sum x}{n} = \\\\frac{40}{100} = 0.4$.",
-                12: "The coefficient of range is calculated as $\\\\frac{\\\\text{Max} - \\\\text{Min}}{\\\\text{Max} + \\\\text{Min}}$. Here, Max = 1575, Min = 1380. Result = $\\\\frac{195}{2955} \\\\approx 0.066$.",
-                13: "Incorrect sum = $100 \\\\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4900 - 210 + 110 = 4800$. Correct mean = $\\\\frac{4800}{100} = 48$.",
+                11: "Standard error = $\\frac{\\sigma}{\\sqrt{n}} = 0.3$. Variance = 9, so $\\sigma = 3$. Therefore, $\\frac{3}{\\sqrt{n}} = 0.3 \\implies n = 100$. The Mean = $\\frac{\\sum x}{n} = \\frac{40}{100} = 0.4$.",
+                12: "The coefficient of range is calculated as $\\frac{\\text{Max} - \\text{Min}}{\\text{Max} + \\text{Min}}$. Here, Max = 1575, Min = 1380. Result = $\\frac{195}{2955} \\approx 0.066$.",
+                13: "Incorrect sum = $100 \\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4900 - 210 + 110 = 4800$. Correct mean = $\\frac{4800}{100} = 48$.",
                 14: "Variables are defined as traits, characteristics, or attributes that can change or assume different values from one individual or observation to another.",
                 15: "Range is a measure of dispersion (how spread out the data is), whereas Mean, Median, and Mode are all measures of central tendency.",
                 16: "Ranking indicates a specific hierarchical order, but the interval or distance between ranks is not uniformly quantified, classifying it as ordinal categorical data.",
@@ -379,66 +402,66 @@
                 26: "a) Shares are countable (Discrete). b) Temperatures are measurable along a continuous scale (Continuous). c) Time is a continuous measurement (Continuous). d) Income is measured in distinct monetary units (Discrete). e) Lengths are measurable physical quantities (Continuous)."
             },
             "room_4": {
-                0: "The sample mean $\\\\bar{x}$ is $\\\\frac{190}{10} = 19$. Subtract 19 from each $x_i$, square the result, and sum those values to get $\\\\sum (x_i-\\\\bar{x})^2$. Divide by $n-1$ for sample variance.",
-                1: "Use the least squares method to calculate the slope $b = \\\\frac{n\\\\sum xy - \\\\sum x\\\\sum y}{n\\\\sum x^2 - (\\\\sum x)^2}$ and intercept $a = \\\\bar{y} - b\\\\bar{x}$ to construct $Y = a + bX$.",
-                2: "The slope is -0.34. If x (return rate) decreases by 1 unit ($-1$), the effect on y is $(-0.34) \\\\times (-1) = +0.34$. Thus, it increases by 0.34%.",
+                0: "The sample mean $\\bar{x}$ is $\\frac{190}{10} = 19$. Subtract 19 from each $x_i$, square the result, and sum those values to get $\\sum (x_i-\\bar{x})^2$. Divide by $n-1$ for sample variance.",
+                1: "Use the least squares method to calculate the slope $b = \\frac{n\\sum xy - \\sum x\\sum y}{n\\sum x^2 - (\\sum x)^2}$ and intercept $a = \\bar{y} - b\\bar{x}$ to construct $Y = a + bX$.",
+                2: "The slope is -0.34. If x (return rate) decreases by 1 unit ($-1$), the effect on y is $(-0.34) \\times (-1) = +0.34$. Thus, it increases by 0.34%.",
                 3: "The simple linear regression equation is typically written as $Y = a + bX$, which contains exactly two constants: the y-intercept ($a$) and the slope ($b$).",
                 4: "A correlation coefficient of -0.85 indicates an inverse relationship (negative) and the magnitude (0.85) is close to 1, indicating it is mathematically strong.",
                 5: "Regression analysis is the specific statistical technique used to build a model (an equation) to predict the value of a dependent variable based on an independent variable.",
                 6: "The constant 'b' represents the slope of the line. A negative value ($b < 0$) means the line will point downward from left to right.",
                 7: "Sorting the sequence 4, 3, 4, 3, 4, 6, 4 gives 3, 3, 4, 4, 4, 4, 6. The mean is 28/7 = 4, the median is 4, and the mode is 4.",
-                8: "Using the Binomial formula ($n=4, p=0.5$). The probability of at least one boy is $1 - P(\\\\text{0 boys}) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
-                9: "Mean $np = 10$, Variance $npq = 5$. Dividing gives $q = 0.5$. Since $p+q=1$, $p=0.5$. Substituting back: $n(0.5) = 10 \\\\implies n=20$."
+                8: "Using the Binomial formula ($n=4, p=0.5$). The probability of at least one boy is $1 - P(\\text{0 boys}) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
+                9: "Mean $np = 10$, Variance $npq = 5$. Dividing gives $q = 0.5$. Since $p+q=1$, $p=0.5$. Substituting back: $n(0.5) = 10 \\implies n=20$."
             },
             "room_3": {
-                0: "If $A \\\\subset B$, the intersection $A \\\\cap B = A$. So $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{P(A)}{P(B)}$. Note: This usually maps to 'None of them' if the explicit fraction isn't an option.",
+                0: "If $A \\subset B$, the intersection $A \\cap B = A$. So $P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A)}{P(B)}$. Note: This usually maps to 'None of them' if the explicit fraction isn't an option.",
                 1: "If the occurrence of A implies B cannot occur, they share no common outcomes, making them mutually exclusive.",
                 2: "If events A and B are independent, their complements ($A^c$ and $B^c$) are also independent of each other and the original events.",
-                3: "The choice of digit (0 to 6 means 7 digits) and letter (26 letters) are independent. $P(6) = \\\\frac{1}{7}$, and $P(Z) = \\\\frac{1}{26}$. Total = $\\\\frac{1}{7} \\\\times \\\\frac{1}{26} = \\\\frac{1}{182}$.",
+                3: "The choice of digit (0 to 6 means 7 digits) and letter (26 letters) are independent. $P(6) = \\frac{1}{7}$, and $P(Z) = \\frac{1}{26}$. Total = $\\frac{1}{7} \\times \\frac{1}{26} = \\frac{1}{182}$.",
                 4: "By the definition of independent events, the occurrence of B does not change the probability of A. Thus, $P(A|B) = P(A)$.",
-                5: "Since $B \\\\subset A$, their intersection is simply B. Thus $P(B|A) = \\\\frac{P(B \\\\cap A)}{P(A)} = \\\\frac{P(B)}{P(A)}$.",
-                6: "$P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{1/3}{1/3} = 1$. This maps to 'None of them' if 1 is not listed.",
-                7: "If $A = B$, they are the identical event. Therefore, $P(A|B) = \\\\frac{P(A \\\\cap A)}{P(A)} = \\\\frac{P(A)}{P(A)} = 1$. Again, 'None of them' applies.",
-                8: "For independent events, the condition does not affect the outcome. Therefore, $P(\\\\text{filling} | \\\\text{cleaning}) = P(\\\\text{filling}) = 0.44$.",
-                9: "Apply basic probability rules: (a) $P(A^c) = 1 - 0.3 = 0.7$. (b) $P(A\\\\cup B) = 0.3 + 0.2 - 0.1 = 0.4$. (c) $P(A^c\\\\cap B) = P(B) - P(A\\\\cap B) = 0.1$.",
-                10: "Total marbles = 10 (4 green). P(first green) = 4/10. P(second green without replacement) = 3/9. Total probability = $\\\\frac{4}{10} \\\\times \\\\frac{3}{9} = \\\\frac{12}{90} = \\\\frac{2}{15}$.",
-                11: "Use conditional probability: $P(\\\\text{football} | \\\\text{baseball}) = \\\\frac{P(\\\\text{both})}{P(\\\\text{baseball})} = \\\\frac{0.24}{0.60} = 0.40$ (or 40%).",
-                12: "Total pencils = 12 (7 yellow). P(first yellow) = 7/12. P(second yellow) = 6/11. Total probability = $\\\\frac{7}{12} \\\\times \\\\frac{6}{11} = \\\\frac{42}{132} = \\\\frac{7}{22}$.",
-                13: "Digits 0-9 gives 10 options. $P(9) = 1/10$. $P(Z) = 1/26$. Total probability = $\\\\frac{1}{10} \\\\times \\\\frac{1}{26} = \\\\frac{1}{260}$.",
-                14: "Standard proofs utilizing the fact that $P(A \\\\cap B) = P(A)P(B)$ and $P(A) = P(A \\\\cap B) + P(A \\\\cap B^c)$.",
-                15: "The total integral of the pdf must be 1. $\\\\int_0^1 k(x^2+1) dx = k[\\\\frac{x^3}{3} + x]_0^1 = k(\\\\frac{1}{3} + 1) = \\\\frac{4k}{3} = 1 \\\\implies k = \\\\frac{3}{4}$.",
-                16: "Sum over the domain must equal 1. $\\\\frac{2(1)}{k} + \\\\frac{2(2)}{k} + \\\\frac{2(3)}{k} + \\\\frac{2(4)}{k} = \\\\frac{2+4+6+8}{k} = \\\\frac{20}{k} = 1 \\\\implies k = 20$.",
-                17: "Variance property: $V(aX-b) = a^2V(X)$. Therefore, $V(\\\\frac{X}{3} - 5) = (\\\\frac{1}{3})^2 V(X) = \\\\frac{1}{9} \\\\times 3 = \\\\frac{1}{3}$.",
+                5: "Since $B \\subset A$, their intersection is simply B. Thus $P(B|A) = \\frac{P(B \\cap A)}{P(A)} = \\frac{P(B)}{P(A)}$.",
+                6: "$P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{1/3}{1/3} = 1$. This maps to 'None of them' if 1 is not listed.",
+                7: "If $A = B$, they are the identical event. Therefore, $P(A|B) = \\frac{P(A \\cap A)}{P(A)} = \\frac{P(A)}{P(A)} = 1$. Again, 'None of them' applies.",
+                8: "For independent events, the condition does not affect the outcome. Therefore, $P(\\text{filling} | \\text{cleaning}) = P(\\text{filling}) = 0.44$.",
+                9: "Apply basic probability rules: (a) $P(A^c) = 1 - 0.3 = 0.7$. (b) $P(A\\cup B) = 0.3 + 0.2 - 0.1 = 0.4$. (c) $P(A^c\\cap B) = P(B) - P(A\\cap B) = 0.1$.",
+                10: "Total marbles = 10 (4 green). P(first green) = 4/10. P(second green without replacement) = 3/9. Total probability = $\\frac{4}{10} \\times \\frac{3}{9} = \\frac{12}{90} = \\frac{2}{15}$.",
+                11: "Use conditional probability: $P(\\text{football} | \\text{baseball}) = \\frac{P(\\text{both})}{P(\\text{baseball})} = \\frac{0.24}{0.60} = 0.40$ (or 40%).",
+                12: "Total pencils = 12 (7 yellow). P(first yellow) = 7/12. P(second yellow) = 6/11. Total probability = $\\frac{7}{12} \\times \\frac{6}{11} = \\frac{42}{132} = \\frac{7}{22}$.",
+                13: "Digits 0-9 gives 10 options. $P(9) = 1/10$. $P(Z) = 1/26$. Total probability = $\\frac{1}{10} \\times \\frac{1}{26} = \\frac{1}{260}$.",
+                14: "Standard proofs utilizing the fact that $P(A \\cap B) = P(A)P(B)$ and $P(A) = P(A \\cap B) + P(A \\cap B^c)$.",
+                15: "The total integral of the pdf must be 1. $\\int_0^1 k(x^2+1) dx = k[\\frac{x^3}{3} + x]_0^1 = k(\\frac{1}{3} + 1) = \\frac{4k}{3} = 1 \\implies k = \\frac{3}{4}$.",
+                16: "Sum over the domain must equal 1. $\\frac{2(1)}{k} + \\frac{2(2)}{k} + \\frac{2(3)}{k} + \\frac{2(4)}{k} = \\frac{2+4+6+8}{k} = \\frac{20}{k} = 1 \\implies k = 20$.",
+                17: "Variance property: $V(aX-b) = a^2V(X)$. Therefore, $V(\\frac{X}{3} - 5) = (\\frac{1}{3})^2 V(X) = \\frac{1}{9} \\times 3 = \\frac{1}{3}$.",
                 18: "By the Linearity of Expectation rule, constants can be factored out: $E(aX+b) = aE(X) + b$. (Check your options for the direct match).",
                 19: "For any continuous probability density function, the exact probability at any single specific point is mathematically 0.",
-                20: "Using the addition rule: $P(A \\\\cup B) = P(A) + P(B) - P(A \\\\cap B) = 0.6 + 0.5 - 0.3 = 0.8$.",
-                21: "If $A - B = \\\\Phi$, it implies $A \\\\subset B$. Thus $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{P(A)}{P(B)}$.",
-                22: "$P(B) = 1 - P(B^c) = 1 - 0.5 = 0.5$. Therefore, $P(A|B) = \\\\frac{P(A \\\\cap B)}{P(B)} = \\\\frac{0.25}{0.5} = 0.5$.",
-                23: "$P(B^c|A) = 1 - P(B|A) = 1 - \\\\frac{1}{3} = \\\\frac{2}{3}$.",
-                24: "By complement rule for conditional probability: $P(A^c|B) = 1 - P(A|B) = 1 - \\\\frac{P(A)}{P(B)}$.",
-                25: "Sum of probabilities is 1: $0.2 + 0.4 + k + 0.2 + 0.1 = 1 \\\\implies k = 0.1$. Then simply sum the relevant probabilities for each subset.",
-                26: "Integral of $kx$ from 0 to 2 is $2k = 1 \\\\implies k = 0.5$. Evaluate $\\\\int 0.5x \\\\, dx$ over the required limits.",
-                27: "Mean $\\\\mu = \\\\sum x p(x)$. Variance $V(X) = \\\\sum x^2 p(x) - \\\\mu^2$. Std Dev = $\\\\sqrt{V(X)}$.",
-                28: "Use integration for Expected Value $\\\\int x f(x) dx$ and Variance $\\\\int x^2 f(x) dx - E[X]^2$. Use properties $E(aX+b) = aE(X)+b$ and $V(aX-b) = a^2V(X)$.",
-                29: "Use Binomial Formula $P(X=x) = \\\\binom{n}{x} p^x q^{n-x}$. (a) $1 - P(X=0)$, (b) evaluate at $X=3$.",
+                20: "Using the addition rule: $P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = 0.6 + 0.5 - 0.3 = 0.8$.",
+                21: "If $A - B = \\Phi$, it implies $A \\subset B$. Thus $P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A)}{P(B)}$.",
+                22: "$P(B) = 1 - P(B^c) = 1 - 0.5 = 0.5$. Therefore, $P(A|B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{0.25}{0.5} = 0.5$.",
+                23: "$P(B^c|A) = 1 - P(B|A) = 1 - \\frac{1}{3} = \\frac{2}{3}$.",
+                24: "By complement rule for conditional probability: $P(A^c|B) = 1 - P(A|B) = 1 - \\frac{P(A)}{P(B)}$.",
+                25: "Sum of probabilities is 1: $0.2 + 0.4 + k + 0.2 + 0.1 = 1 \\implies k = 0.1$. Then simply sum the relevant probabilities for each subset.",
+                26: "Integral of $kx$ from 0 to 2 is $2k = 1 \\implies k = 0.5$. Evaluate $\\int 0.5x \\, dx$ over the required limits.",
+                27: "Mean $\\mu = \\sum x p(x)$. Variance $V(X) = \\sum x^2 p(x) - \\mu^2$. Std Dev = $\\sqrt{V(X)}$.",
+                28: "Use integration for Expected Value $\\int x f(x) dx$ and Variance $\\int x^2 f(x) dx - E[X]^2$. Use properties $E(aX+b) = aE(X)+b$ and $V(aX-b) = a^2V(X)$.",
+                29: "Use Binomial Formula $P(X=x) = \\binom{n}{x} p^x q^{n-x}$. (a) $1 - P(X=0)$, (b) evaluate at $X=3$.",
                 30: "Use Binomial Formula with $n=10, p=0.6, q=0.4$. (a) evaluate $P(X=6)$. (b) evaluate $P(X=0) + P(X=1) + P(X=2)$."
             },
             "Math103_24_25": {
-                0: "Variance property states that $V(aX) = a^2V(X)$. Therefore, $V(\\\\frac{X}{3}) = (\\\\frac{1}{3})^2 V(X) = \\\\frac{1}{9} \\\\times \\\\frac{1}{3} = \\\\frac{1}{27}$.",
+                0: "Variance property states that $V(aX) = a^2V(X)$. Therefore, $V(\\frac{X}{3}) = (\\frac{1}{3})^2 V(X) = \\frac{1}{9} \\times \\frac{1}{3} = \\frac{1}{27}$.",
                 1: "Linearity of expectation states that constants can be pulled out: $E(aX + b) = aE(X) + b$.",
-                2: "If $A \\\\subset B$, the occurrence of A guarantees B. Thus, $P(B|A) = \\\\frac{P(A \\\\cap B)}{P(A)} = \\\\frac{P(A)}{P(A)} = 1$. Note: Depending on the context of the choices provided, index 2 was marked correct.",
+                2: "If $A \\subset B$, the occurrence of A guarantees B. Thus, $P(B|A) = \\frac{P(A \\cap B)}{P(A)} = \\frac{P(A)}{P(A)} = 1$. Note: Depending on the context of the choices provided, index 2 was marked correct.",
                 3: "If the occurrence of event A implies that event B cannot occur, they share no common outcomes, making them mutually exclusive.",
-                4: "The integral of the pdf must equal 1: $\\\\int_{0}^{1} k(x^3+1) dx = k[\\\\frac{1}{4} + 1] = k(\\\\frac{5}{4}) = 1 \\\\implies k = \\\\frac{4}{3}$.",
-                5: "The sum of the probabilities must be 1. $\\\\frac{2(1)}{k} + \\\\frac{2(2)}{k} + \\\\frac{2(3)}{k} + \\\\frac{2(4)}{k} = \\\\frac{20}{k} = 1 \\\\implies k = 20$.",
-                6: "Standard deviation scales by the absolute value of the multiplier. If $Y = \\\\frac{X}{3}$, then $\\\\sigma_Y = \\\\frac{\\\\sigma_X}{3} = \\\\frac{6}{3} = 2$.",
+                4: "The integral of the pdf must equal 1: $\\int_{0}^{1} k(x^3+1) dx = k[\\frac{1}{4} + 1] = k(\\frac{5}{4}) = 1 \\implies k = \\frac{4}{3}$.",
+                5: "The sum of the probabilities must be 1. $\\frac{2(1)}{k} + \\frac{2(2)}{k} + \\frac{2(3)}{k} + \\frac{2(4)}{k} = \\frac{20}{k} = 1 \\implies k = 20$.",
+                6: "Standard deviation scales by the absolute value of the multiplier. If $Y = \\frac{X}{3}$, then $\\sigma_Y = \\frac{\\sigma_X}{3} = \\frac{6}{3} = 2$.",
                 7: "The dataset contains an extreme outlier (40 or 400 depending on the typo). The median is resistant to such extreme outliers and best represents the true central tendency.",
                 8: "For ordinal categorical data (weak, moderate, strong, extreme), the Median is the most mathematically appropriate measure of central tendency.",
-                9: "The formula is $CV = (\\\\frac{\\\\sigma}{\\\\mu}) \\\\times 100$. Plugging the values: $58 = (\\\\frac{21.2}{\\\\mu}) \\\\times 100 \\\\implies \\\\mu = \\\\frac{2120}{58} \\\\approx 36.55$.",
-                10: "If sum is 20 and mean is 4, then $n = 5$. The rank (position) of the median for 5 items is $\\\\frac{n+1}{2} = 3$. Based on the options, '5 and 6' was selected in your key.",
-                11: "Total marks = $100 \\\\times 72 = 7200$. Boys' marks = $80 \\\\times 70 = 5600$. Girls' marks = $7200 - 5600 = 1600$. Girls' average = $\\\\frac{1600}{20} = 80$.",
+                9: "The formula is $CV = (\\frac{\\sigma}{\\mu}) \\times 100$. Plugging the values: $58 = (\\frac{21.2}{\\mu}) \\times 100 \\implies \\mu = \\frac{2120}{58} \\approx 36.55$.",
+                10: "If sum is 20 and mean is 4, then $n = 5$. The rank (position) of the median for 5 items is $\\frac{n+1}{2} = 3$. Based on the options, '5 and 6' was selected in your key.",
+                11: "Total marks = $100 \\times 72 = 7200$. Boys' marks = $80 \\times 70 = 5600$. Girls' marks = $7200 - 5600 = 1600$. Girls' average = $\\frac{1600}{20} = 80$.",
                 12: "A numerical dataset mathematically possesses exactly one mean and one median, but it can be bimodal or multimodal (having multiple modes).",
-                13: "Standard error = $\\\\frac{\\\\sigma}{\\\\sqrt{n}}$. Given variance = $0.4$, $\\\\sigma = \\\\sqrt{0.4}$. Calculate $n$, then Mean = $\\\\frac{\\\\sum x_i}{n}$. (Based on typical typo corrections, mean yields 0.2).",
-                14: "Incorrect sum = $100 \\\\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4800$. Correct mean = $\\\\frac{4800}{100} = 48$.",
+                13: "Standard error = $\\frac{\\sigma}{\\sqrt{n}}$. Given variance = $0.4$, $\\sigma = \\sqrt{0.4}$. Calculate $n$, then Mean = $\\frac{\\sum x_i}{n}$. (Based on typical typo corrections, mean yields 0.2).",
+                14: "Incorrect sum = $100 \\times 49 = 4900$. Correct sum = $4900 - (60+70+80) + (40+20+50) = 4800$. Correct mean = $\\frac{4800}{100} = 48$.",
                 15: "Variables are defined as characteristics or attributes that can assume different values from one individual to another.",
                 16: "Range is a measure of dispersion (spread), whereas Mean, Median, and Mode are measures of central tendency.",
                 17: "Ranking indicates a specific hierarchical order, but the distance between ranks is not uniformly equal, which classifies it as ordinal data.",
@@ -449,12 +472,12 @@
                 22: "Regression analysis is the statistical technique used to model the relationship between variables to provide a prediction mechanism.",
                 23: "In the linear equation $Y = a + bX$, a negative slope ($b < 0$) causes the graphed line to travel downward from left to right.",
                 24: "Sorting the sequence 4, 3, 4, 3, 4, 6, 4 gives 3, 3, 4, 4, 4, 4, 6. The Mean is 4, Median is 4, and Mode is 4.",
-                25: "Using Binomial distribution ($n=4, p=0.5$). $P(X \\\\geq 1) = 1 - P(X=0) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
-                26: "Mean $np=10$, Variance $npq=5$. Dividing gives $q = 0.5$, so $p = 0.5$. Substituting back: $n(0.5) = 10 \\\\implies n = 20$.",
+                25: "Using Binomial distribution ($n=4, p=0.5$). $P(X \\geq 1) = 1 - P(X=0) = 1 - (0.5)^4 = 1 - 0.0625 = 0.9375$.",
+                26: "Mean $np=10$, Variance $npq=5$. Dividing gives $q = 0.5$, so $p = 0.5$. Substituting back: $n(0.5) = 10 \\implies n = 20$.",
                 27: "Assuming $F(x)$ represents the cumulative distribution function (CDF), $F(2.5)$ represents the accumulated probability from $0$ up to $2.5$.",
                 28: "The slope coefficient is $2$, meaning for every $1$ unit increase in the independent variable $X$, $Y$ increases by $2$ units.",
                 29: "A fundamental property: If A and B are independent, any combination of them and their complements are also independent.",
-                30: "The events are independent. $P(7) = \\\\frac{1}{8}$. Probability of a specific letter is $\\\\frac{1}{26}$. Total probability = $\\\\frac{1}{8} \\\\times \\\\frac{1}{26} = \\\\frac{1}{208}$.",
+                30: "The events are independent. $P(7) = \\frac{1}{8}$. Probability of a specific letter is $\\frac{1}{26}$. Total probability = $\\frac{1}{8} \\times \\frac{1}{26} = \\frac{1}{208}$.",
                 31: "In the dataset 2, 2, 3, 3, both the number 2 and the number 3 appear with the highest frequency (twice), making it bimodal.",
                 32: "If events A and B are completely independent, the occurrence of A provides no new information about B. Thus, $P(B|A) = P(B)$.",
                 33: "Pearson's correlation coefficient ($r$) is mathematically bounded between $-1$ (perfect negative) and $1$ (perfect positive).",
@@ -462,25 +485,25 @@
             },
             "Math103_2024": {
                 0: "Mutually exclusive events cannot occur at the same time, meaning their intersection is an empty set. Therefore, the probability of their intersection is exactly $0$.",
-                1: "A fundamental axiom for a discrete probability mass function is that the sum of all individual probabilities over the entire sample space must exactly equal 1, mathematically represented as $\\\\sum f(x) = 1$.",
-                2: "The standard theoretical formula for the Poisson Probability Mass Function is $\\\\frac{e^{-\\\\lambda} \\\\lambda^{x}}{x!}$, where $\\\\lambda$ is the average rate of value.",
+                1: "A fundamental axiom for a discrete probability mass function is that the sum of all individual probabilities over the entire sample space must exactly equal 1, mathematically represented as $\\sum f(x) = 1$.",
+                2: "The standard theoretical formula for the Poisson Probability Mass Function is $\\frac{e^{-\\lambda} \\lambda^{x}}{x!}$, where $\\lambda$ is the average rate of value.",
                 3: "A key property of independence: If events A and B are independent, their complements ($A^{c}$ and $B^{c}$) are also independent of each other and of the original events.",
-                4: "For a Poisson distribution, a unique mathematical characteristic is that both the Mean ($\\\\mu$) and the Variance ($\\\\sigma^{2}$) are equal to $\\\\lambda$. Consequently, the standard deviation is $\\\\sqrt{\\\\lambda}$.",
+                4: "For a Poisson distribution, a unique mathematical characteristic is that both the Mean ($\\mu$) and the Variance ($\\sigma^{2}$) are equal to $\\lambda$. Consequently, the standard deviation is $\\sqrt{\\lambda}$.",
                 5: "A correlation coefficient of precisely $r = 1$ implies that all data points lie perfectly on a straight ascending line, representing a perfect positive linear relationship.",
                 6: "This is the established standard formula for calculating the mode in grouped continuous frequency distributions, utilizing the differences ($D_1$ and $D_2$) between adjacent class frequencies.",
                 7: "This is the classic non-parametric Spearman rank correlation formula, which measures statistical dependence between rankings using the squared differences in ranks ($d_i$).",
-                8: "The population variance for grouped continuous data calculates the squared deviations from the mean, multiplied by their frequencies, and divided by the total population size $\\\\sum f_i$.",
+                8: "The population variance for grouped continuous data calculates the squared deviations from the mean, multiplied by their frequencies, and divided by the total population size $\\sum f_i$.",
                 9: "Range is a measure of dispersion (how spread out the data is), whereas Mean, Mode, and Median are all measures of central tendency.",
-                10: "1) Calculate Mean by summing and dividing by $n$. Median is the middle value of sorted data. Mode is the most frequent. 2) Range = Max - Min. Variance uses $\\\\frac{\\\\sum(x-\\\\overline{x})^2}{n}$. Standard deviation is the square root of variance. $CV = (\\\\sigma/\\\\mu)*100$.",
-                11: "a) Integrate $k(x^3+1)$ from $0$ to $1$ and set equal to $1$ to find $k = \\\\frac{4}{3}$. b) Integrate the pdf from $1$ to $2$. c) Evaluate $\\\\int x f(x) dx$ for expected value, and $\\\\int x^2 f(x) dx - (E[X])^2$ for variance. d) Apply linearity properties: $E[5X+3] = 5E[X]+3$ and $V(3X-7) = 9V(X)$.",
-                12: "i) Create a table for $X, Y, X^2, Y^2, XY$, sum them up, and apply the Pearson correlation formula. ii) Calculate the slope $\\\\beta_1$ and intercept $\\\\beta_0$ to form the linear equation $Y = \\\\beta_0 + \\\\beta_1 X$.",
-                13: "Assign numerical ranks to both sets of alphabetical grades (e.g., A=1, B=2, etc.). Calculate the difference $d$ between ranks for each pair, square them, and apply the Spearman formula $1 - \\\\frac{6\\\\sum d^2}{n(n^2 - 1)}$."
+                10: "1) Calculate Mean by summing and dividing by $n$. Median is the middle value of sorted data. Mode is the most frequent. 2) Range = Max - Min. Variance uses $\\frac{\\sum(x-\\overline{x})^2}{n}$. Standard deviation is the square root of variance. $CV = (\\sigma/\\mu)*100$.",
+                11: "a) Integrate $k(x^3+1)$ from $0$ to $1$ and set equal to $1$ to find $k = \\frac{4}{3}$. b) Integrate the pdf from $1$ to $2$. c) Evaluate $\\int x f(x) dx$ for expected value, and $\\int x^2 f(x) dx - (E[X])^2$ for variance. d) Apply linearity properties: $E[5X+3] = 5E[X]+3$ and $V(3X-7) = 9V(X)$.",
+                12: "i) Create a table for $X, Y, X^2, Y^2, XY$, sum them up, and apply the Pearson correlation formula. ii) Calculate the slope $\\beta_1$ and intercept $\\beta_0$ to form the linear equation $Y = \\beta_0 + \\beta_1 X$.",
+                13: "Assign numerical ranks to both sets of alphabetical grades (e.g., A=1, B=2, etc.). Calculate the difference $d$ between ranks for each pair, square them, and apply the Spearman formula $1 - \\frac{6\\sum d^2}{n(n^2 - 1)}$."
             },
             "Math103_2023_DrHossam": {
-                0: "a) Mutually exclusive: $A \\\\cap B = \\\\phi$. Independent: $P(A \\\\cap B) = P(A)P(B)$. Axioms: $P(E) \\\\geq 0$, $P(S) = 1$, and additivity for disjoint events. b) i) $P(X \\\\geq 3) = P(3) + P(4) = 0.03 + 0.01 = 0.04$. ii) $P(X \\\\leq 1) = P(0) + P(1) = 0.6 + 0.2 = 0.8$.",
-                1: "a) Sorted data: 5, 7, 8, 15, 25. Calculate Arithmetic Mean, Geometric Mean ($\\sqrt[5]{\\\\text{product}}$), Median (middle), Mode, and $CV$. b) By the Binomial theorem, the sum over its range equals $(p+q)^n = 1^n = 1$. MGF is $(q + pe^t)^n$.",
-                2: "a) The total area under the curve is $\\\\int_{a}^{b} \\\\frac{1}{b-a} dx = 1$. Calculate $E(x^7)$ by evaluating $\\\\int_{a}^{b} \\\\frac{x^7}{b-a} dx$. b) Best point estimate is the sample mean ($70$). The 95% confidence interval is $70 \\\\pm 1.96(\\\\frac{7}{\\\\sqrt{49}})$.",
-                3: "a) Calculate $\\\\sum X, \\\\sum Y, \\\\sum X^2, \\\\sum Y^2, \\\\sum XY$ and apply the Pearson correlation formula. b) Find regression coefficients $\\\\beta_0$ and $\\\\beta_1$ for the line $Y = \\\\beta_0 + \\\\beta_1 X$. c) Substitute $X = 1.5$ into the derived regression equation to predict $Y$."
+                0: "a) Mutually exclusive: $A \\cap B = \\phi$. Independent: $P(A \\cap B) = P(A)P(B)$. Axioms: $P(E) \\geq 0$, $P(S) = 1$, and additivity for disjoint events. b) i) $P(X \\geq 3) = P(3) + P(4) = 0.03 + 0.01 = 0.04$. ii) $P(X \\leq 1) = P(0) + P(1) = 0.6 + 0.2 = 0.8$.",
+                1: "a) Sorted data: 5, 7, 8, 15, 25. Calculate Arithmetic Mean, Geometric Mean ($\\sqrt[5]{\\text{product}}$), Median (middle), Mode, and $CV$. b) By the Binomial theorem, the sum over its range equals $(p+q)^n = 1^n = 1$. MGF is $(q + pe^t)^n$.",
+                2: "a) The total area under the curve is $\\int_{a}^{b} \\frac{1}{b-a} dx = 1$. Calculate $E(x^7)$ by evaluating $\\int_{a}^{b} \\frac{x^7}{b-a} dx$. b) Best point estimate is the sample mean ($70$). The 95% confidence interval is $70 \\pm 1.96(\\frac{7}{\\sqrt{49}})$.",
+                3: "a) Calculate $\\sum X, \\sum Y, \\sum X^2, \\sum Y^2, \\sum XY$ and apply the Pearson correlation formula. b) Find regression coefficients $\\beta_0$ and $\\beta_1$ for the line $Y = \\beta_0 + \\beta_1 X$. c) Substitute $X = 1.5$ into the derived regression equation to predict $Y$."
             }
         };
 
@@ -507,7 +530,8 @@
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 try {
-                    state = JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    state = parsed;
                 } catch(e) {
                     console.error("Error parsing saved state.");
                 }
@@ -546,9 +570,34 @@
             themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
         });
 
+        function recalcGlobalScore() {
+            let attempted = 0;
+            let correct = 0;
+            
+            for (const roomId in state.questionEvaluated) {
+                const roomEval = state.questionEvaluated[roomId];
+                const roomQuestions = examQuestions[roomId]?.questions;
+                if (!roomQuestions) continue;
+                
+                for (let idx in roomEval) {
+                    if (roomEval[idx] === true) {
+                        attempted++;
+                        const userAnswer = state.answers[roomId]?.[idx];
+                        const q = roomQuestions[idx];
+                        if (q && q.type === 'mcq' && userAnswer !== undefined && userAnswer === q.correct) {
+                            correct++;
+                        }
+                    }
+                }
+            }
+            
+            state.globalScore = { totalAttempted: attempted, totalCorrect: correct };
+            updateLiveScore();
+        }
+
         function initApp() {
             loadProgress();
-            updateLiveScore();
+            recalcGlobalScore();
 
             // تحديد الغرفة المراد تحميلها عند فتح الصفحة
             let roomToLoad = state.currentRoom || Object.keys(examQuestions)[0];
@@ -556,7 +605,7 @@
 
             Object.keys(examQuestions).forEach((roomId, index) => {
                 const btn = document.createElement('button');
-                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border`;
+                btn.className = `room-tab px-4 sm:px-5 py-2 rounded-xl font-medium text-sm glass-panel border flex-shrink-0`;
                 btn.innerText = examQuestions[roomId].title;
                 btn.onclick = () => loadRoom(roomId, btn);
                 navContainer.appendChild(btn);
@@ -592,32 +641,33 @@
             
             questions.forEach((q, index) => {
                 const isEvaluated = state.questionEvaluated[roomId][index];
+                const savedAnswer = state.answers[roomId][index];
 
                 const card = document.createElement('div');
                 card.id = `qcard-${index}`;
-                card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden question-card';
+                card.className = 'glass-panel rounded-2xl p-4 sm:p-6 transition-all duration-300 relative overflow-hidden question-card';
                 
                 const processedText = fixLatexEscaping(q.text);
 
                 const header = document.createElement('div');
-                header.className = 'flex items-center gap-3 mb-4';
+                header.className = 'flex items-start gap-3 mb-4';
                 header.innerHTML = `
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-sm">
+                    <span class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-sm flex-shrink-0">
                         ${index + 1}
                     </span>
-                    <h3 class="text-lg font-medium leading-relaxed flex-grow text-wrap">${processedText}</h3>
+                    <h3 class="text-base sm:text-lg font-medium leading-relaxed question-text flex-grow">${processedText}</h3>
                 `;
                 card.appendChild(header);
 
                 if (q.type === 'mcq' || q.type === 'tf') {
                     const gridClass = q.type === 'tf' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2';
                     const optionsContainer = document.createElement('div');
-                    optionsContainer.className = `grid ${gridClass} gap-3 mt-4`;
+                    optionsContainer.className = `grid ${gridClass} gap-2 sm:gap-3 mt-4`;
                     
                     q.options.forEach((opt, optIndex) => {
-                        const isChecked = state.answers[roomId][index] === optIndex;
+                        const isChecked = (savedAnswer !== undefined && savedAnswer === optIndex);
                         const wrapper = document.createElement('label');
-                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative`;
+                        wrapper.className = `option-wrapper flex items-center p-3 sm:p-4 rounded-xl cursor-pointer relative`;
                         if(isEvaluated) wrapper.classList.add('disabled');
                         
                         const input = document.createElement('input');
@@ -660,7 +710,7 @@
 
                         const processedOpt = fixLatexEscaping(opt);
                         const textDiv = document.createElement('div');
-                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
+                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm option-text';
                         textDiv.innerHTML = processedOpt;
                         
                         // Render loaded state (لو كان محلول قبل كده والصفحة اتعملها ريفرش)
@@ -678,11 +728,16 @@
                     });
                     card.appendChild(optionsContainer);
                     
+                    // إذا كان السؤال محلول سابقاً، أضف الـ Explanation
+                    if (isEvaluated) {
+                        appendExplanation(card, roomId, index, q);
+                    }
+                    
                 } else if (q.type === 'subjective') {
                     const textArea = document.createElement('textarea');
-                    textArea.className = 'w-full h-32 p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-indigo)] transition-colors resize-none';
+                    textArea.className = 'w-full h-28 sm:h-32 p-3 sm:p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-indigo)] transition-colors resize-none';
                     textArea.placeholder = "Formulate your mathematical proof or logic here...";
-                    textArea.value = state.answers[roomId][index] || '';
+                    textArea.value = savedAnswer || '';
                     textArea.disabled = isEvaluated;
                     
                     if (!isEvaluated) {
@@ -693,7 +748,7 @@
 
                         const showAnsBtn = document.createElement('button');
                         showAnsBtn.type = 'button';
-                        showAnsBtn.className = 'mt-4 px-5 py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors text-[var(--text-main)]';
+                        showAnsBtn.className = 'mt-3 sm:mt-4 px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors text-[var(--text-main)]';
                         showAnsBtn.innerText = '👁️ إظهار الحل النموذجي';
                         showAnsBtn.onclick = (e) => {
                             e.preventDefault();
@@ -701,40 +756,47 @@
                             textArea.disabled = true;
                             showAnsBtn.remove();
                             appendExplanation(card, roomId, index, q);
+                            recalcGlobalScore();
                             saveProgress();
                         };
                         card.appendChild(showAnsBtn);
                     }
-                }
-
-                if (isEvaluated) {
-                    appendExplanation(card, roomId, index, q);
+                    
+                    if (isEvaluated) {
+                        appendExplanation(card, roomId, index, q);
+                    }
+                    
+                    card.appendChild(textArea);
                 }
 
                 formContainer.appendChild(card);
             });
 
-            MathJax.typesetPromise([formContainer]);
+            MathJax.typesetPromise([formContainer]).catch(err => console.log("MathJax error:", err));
         }
 
         function appendExplanation(card, roomId, index, q) {
+            // تجنب إضافة الشرح مرتين
+            if (card.querySelector('.explanation-box')) return;
+            
             const expBox = document.createElement('div');
+            expBox.className = 'explanation-box mt-4 p-3 sm:p-4 rounded-xl bg-[var(--bg-body)] border text-sm fade-in';
             const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
             
             if (q.type === 'mcq' || q.type === 'tf') {
-                expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
-                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${fixLatexEscaping(explanationText)}`;
+                expBox.classList.add('border-[var(--accent-indigo)]', 'opacity-90', 'border-l-4', 'border-l-[var(--accent-indigo)]');
+                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> <span class="question-text">${fixLatexEscaping(explanationText)}</span>`;
             } else if (q.type === 'subjective') {
-                expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
-                expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
+                expBox.classList.add('badge-pass', 'border');
+                expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans block mb-1">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap question-text">${fixLatexEscaping(explanationText)}</span>`;
             }
             card.appendChild(expBox);
-            MathJax.typesetPromise([expBox]);
+            MathJax.typesetPromise([expBox]).catch(err => console.log("MathJax error:", err));
         }
 
         // مسح التقدم (Reset Progress)
         resetBtn.addEventListener('click', () => {
-            if(confirm('هل أنت متأكد أنك تريد مسح جميع إجاباتك وإعادة البدء من جديد؟')) {
+            if(confirm('⚠️ هل أنت متأكد أنك تريد مسح جميع إجاباتك وإعادة البدء من جديد؟')) {
                 localStorage.removeItem(STORAGE_KEY);
                 location.reload();
             }
