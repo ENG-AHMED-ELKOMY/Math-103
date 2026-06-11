@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,9 @@
                 displayMath: [['$$', '$$']],
                 processEscapes: true
             },
-            startup: { typeset: false }
+            startup: {
+                typeset: false 
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -49,6 +51,9 @@
             --accent-emerald: #34d399;
             --accent-indigo: #6366f1;
             --glass-blur: 16px;
+            --nav-active-bg: rgba(99, 102, 241, 0.2);
+            --nav-active-text: #818cf8;
+            --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.15);
         }
 
         body.light-theme {
@@ -59,6 +64,9 @@
             --text-muted: #64748b;
             --accent-emerald: #10b981;
             --accent-indigo: #4338ca;
+            --nav-active-bg: #ede9fe;
+            --nav-active-text: #4338ca;
+            --shadow-glow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         body {
@@ -72,7 +80,8 @@
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--border-color);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s ease;
         }
 
         .room-tab {
@@ -80,8 +89,8 @@
             white-space: nowrap;
         }
         .room-tab.active {
-            background: rgba(99, 102, 241, 0.2);
-            color: #818cf8;
+            background: var(--nav-active-bg);
+            color: var(--nav-active-text);
             border-color: var(--accent-indigo);
             font-weight: 600;
         }
@@ -92,35 +101,49 @@
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        .option-wrapper:hover:not(.disabled) {
+        .option-wrapper:hover {
             border-color: var(--accent-indigo);
             transform: translateY(-1px);
         }
-
+        .option-wrapper input:checked + div {
+            color: var(--accent-indigo);
+            font-weight: 600;
+        }
+        
         .badge-pass {
             border-color: var(--accent-emerald) !important;
-            background: rgba(52, 211, 153, 0.15) !important;
+            background: rgba(52, 211, 153, 0.1) !important;
         }
         .badge-fail {
             border-color: #ef4444 !important;
-            background: rgba(239, 68, 68, 0.15) !important;
+            background: rgba(239, 68, 68, 0.1) !important;
         }
-        .disabled { cursor: not-allowed !important; }
-
-        .question-header h3 {
-            word-break: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
-        }
-
+        
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .fade-in { animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* New styles for immediate feedback */
+        .option-wrapper.correct {
+            border-color: var(--accent-emerald) !important;
+            background: rgba(52, 211, 153, 0.15) !important;
+        }
+        .option-wrapper.incorrect {
+            border-color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.15) !important;
         }
     </style>
 </head>
@@ -139,28 +162,53 @@
 
         <div class="flex items-center gap-6">
             <div class="hidden sm:flex flex-col items-end">
-                <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Live Score</span>
+                <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Global Score</span>
                 <span id="global-score" class="text-2xl font-bold gradient-text">0%</span>
             </div>
             <button id="theme-toggle" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
                 🌙 Dark
             </button>
+            <button id="reset-progress" onclick="resetAllProgress()" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform text-red-400">
+                Reset All
+            </button>
         </div>
     </header>
 
     <div class="px-4 pt-6 pb-2 max-w-5xl mx-auto w-full">
-        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth"></div>
+        <div id="navbar-rooms-container" class="flex overflow-x-auto space-x-3 pb-2 scroll-smooth">
+            </div>
     </div>
 
-    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-10">
-        <form id="exam-form" class="space-y-6"></form>
+    <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-32">
+        <div id="room-banner" class="hidden glass-panel rounded-2xl p-6 mb-8 text-center fade-in">
+            </div>
 
-        <div class="mt-10 flex justify-center">
-            <button type="button" id="reset-exam-btn" class="px-6 py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
-                🗑️ مسح التقدم وإعادة البدء (Reset Progress)
+        <form id="exam-form" class="space-y-6">
+            </form>
+
+        <div id="submit-container" class="hidden mt-10 flex justify-end">
+            <button type="button" id="submit-exam-btn" class="px-8 py-4 rounded-xl text-white font-bold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all transform hover:-translate-y-1" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
+                Evaluate All Remaining
             </button>
         </div>
     </main>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
+        <button id="nav-prev" class="text-[var(--text-muted)] hover:text-[var(--accent-indigo)] transition-colors p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        
+        <div class="flex-grow mx-6 flex flex-col items-center">
+            <span id="nav-counter" class="text-sm font-bold tracking-wide mb-1">Question 0 / 0</span>
+            <div class="w-full bg-[var(--bg-body)] h-2 rounded-full overflow-hidden border border-[var(--border-color)]">
+                <div id="nav-progress" class="h-full rounded-full transition-all duration-500 ease-out" style="width: 0%; background: linear-gradient(90deg, var(--accent-indigo), var(--accent-emerald));"></div>
+            </div>
+        </div>
+
+        <button id="nav-next" class="text-[var(--text-muted)] hover:text-[var(--accent-emerald)] transition-colors p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
 
     <footer class="mt-auto glass-panel border-b-0 border-l-0 border-r-0 py-6 px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div class="text-sm font-semibold text-[var(--text-muted)] tracking-wide">
@@ -173,7 +221,7 @@
 
     <script>
         // =====================================================================
-        // 1. قاعدة بيانات الأسئلة (كاملة)
+        // 1. قاعدة بيانات الأسئلة (unchanged)
         // =====================================================================
  const examQuestions = {
             "room_5": {
@@ -469,52 +517,52 @@
         };
 
 
-        // =====================================================================
-        // 3. App Logic (النسخة المُحسّنة)
-        // =====================================================================
-        const STORAGE_KEY = 'math103_exam_progress';
-
+        // Persistent state
         let state = {
             currentRoom: null,
-            answers: {},
-            questionEvaluated: {},
+            answers: {},      
+            evaluated: {},    
             globalScore: { totalAttempted: 0, totalCorrect: 0 }
         };
 
-        const navContainer = document.getElementById('navbar-rooms-container');
-        const formContainer = document.getElementById('exam-form');
-        const themeBtn = document.getElementById('theme-toggle');
-        const globalScoreEl = document.getElementById('global-score');
-        const resetBtn = document.getElementById('reset-exam-btn');
-
+        // Load from localStorage
         function loadProgress() {
-            const saved = localStorage.getItem(STORAGE_KEY);
+            const saved = localStorage.getItem('math103Progress');
             if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    state = Object.assign({}, state, parsed);
-                } catch(e) {
-                    console.error("Error parsing saved progress");
-                }
+                const parsed = JSON.parse(saved);
+                state.answers = parsed.answers || {};
+                state.evaluated = parsed.evaluated || {};
+                state.globalScore = parsed.globalScore || { totalAttempted: 0, totalCorrect: 0 };
             }
-
-            // تهيئة الغرف الجديدة
+            // Initialize missing rooms
             Object.keys(examQuestions).forEach(roomId => {
                 if (!state.answers[roomId]) state.answers[roomId] = {};
-                if (!state.questionEvaluated[roomId]) state.questionEvaluated[roomId] = {};
+                if (typeof state.evaluated[roomId] === 'undefined') state.evaluated[roomId] = false;
             });
-            if (!state.globalScore) state.globalScore = { totalAttempted: 0, totalCorrect: 0 };
         }
 
         function saveProgress() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            localStorage.setItem('math103Progress', JSON.stringify({
+                answers: state.answers,
+                evaluated: state.evaluated,
+                globalScore: state.globalScore
+            }));
         }
 
-        function updateLiveScore() {
-            const perc = state.globalScore.totalAttempted === 0 ? 0 : 
-                Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
-            globalScoreEl.innerText = `${perc}%`;
+        function resetAllProgress() {
+            if (confirm('هل أنت متأكد من إعادة تعيين كل التقدم؟')) {
+                localStorage.removeItem('math103Progress');
+                location.reload();
+            }
         }
+
+        const navContainer = document.getElementById('navbar-rooms-container');
+        const formContainer = document.getElementById('exam-form');
+        const roomBanner = document.getElementById('room-banner');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-exam-btn');
+        const themeBtn = document.getElementById('theme-toggle');
+        const globalScoreEl = document.getElementById('global-score');
 
         function fixLatexEscaping(str) {
             if (!str) return '';
@@ -525,70 +573,70 @@
         themeBtn.addEventListener('click', () => {
             isLight = !isLight;
             document.body.classList.toggle('light-theme', isLight);
-            themeBtn.innerHTML = isLight ? '☀️ Light' : '🌙 Dark';
+            themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
         });
 
         function initApp() {
             loadProgress();
-            updateLiveScore();
-
-            let roomToLoad = state.currentRoom || Object.keys(examQuestions)[0];
-            let btnToClick = null;
-
-            Object.keys(examQuestions).forEach((roomId) => {
+            
+            Object.keys(examQuestions).forEach((roomId, index) => {
                 const btn = document.createElement('button');
-                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border flex-shrink-0`;
+                btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${index === 0 ? 'active' : ''}`;
                 btn.innerText = examQuestions[roomId].title;
                 btn.onclick = () => loadRoom(roomId, btn);
                 navContainer.appendChild(btn);
                 
-                if (roomId === roomToLoad) btnToClick = btn;
+                if (index === 0) loadRoom(roomId, btn);
             });
-            
-            if (btnToClick) loadRoom(roomToLoad, btnToClick);
         }
 
         function loadRoom(roomId, btnElement) {
             state.currentRoom = roomId;
-            saveProgress();
-
+            
             document.querySelectorAll('.room-tab').forEach(b => b.classList.remove('active'));
             if (btnElement) btnElement.classList.add('active');
-
+            
             formContainer.innerHTML = '';
             formContainer.classList.remove('fade-in');
-            void formContainer.offsetWidth;
+            void formContainer.offsetWidth; 
             formContainer.classList.add('fade-in');
-
+            
+            const isEvaluated = state.evaluated[roomId];
             const questions = examQuestions[roomId].questions;
 
+            if(questions.length === 0) {
+                formContainer.innerHTML = `<div class="text-center py-10 text-[var(--text-muted)] font-bold">لا توجد أسئلة متاحة.</div>`;
+                updateSubmitUI();
+                return;
+            }
+            
             questions.forEach((q, index) => {
-                const isEvaluated = !!state.questionEvaluated[roomId][index];
                 const card = document.createElement('div');
+                card.id = `qcard-${index}`;
                 card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden question-card';
-
+                
                 const processedText = fixLatexEscaping(q.text);
 
                 const header = document.createElement('div');
-                header.className = 'flex flex-col sm:flex-row sm:items-start gap-4 mb-5';
+                header.className = 'flex items-center gap-3 mb-4';
                 header.innerHTML = `
-                    <span class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-2xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-base">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-[var(--accent-indigo)] font-bold text-sm">
                         ${index + 1}
                     </span>
-                    <h3 class="text-base sm:text-lg font-medium leading-relaxed flex-1 question-header">${processedText}</h3>
+                    <h3 class="text-lg font-medium leading-relaxed flex-grow text-wrap">${processedText}</h3>
                 `;
                 card.appendChild(header);
 
-                if (q.type === 'mcq') {
+                if (q.type === 'mcq' || q.type === 'tf') {
+                    const gridClass = q.type === 'tf' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2';
                     const optionsContainer = document.createElement('div');
-                    optionsContainer.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2';
-
+                    optionsContainer.className = `grid ${gridClass} gap-3 mt-4`;
+                    
                     q.options.forEach((opt, optIndex) => {
                         const isChecked = state.answers[roomId][index] === optIndex;
                         const wrapper = document.createElement('label');
-                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative text-sm`;
-                        if (isEvaluated) wrapper.classList.add('disabled');
-
+                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative ${isEvaluated && isChecked ? 'ring-2 ring-indigo-500' : ''}`;
+                        
                         const input = document.createElement('input');
                         input.type = 'radio';
                         input.name = `q-${roomId}-${index}`;
@@ -596,40 +644,48 @@
                         input.className = 'hidden';
                         input.checked = isChecked;
                         input.disabled = isEvaluated;
-
-                        if (!isEvaluated) {
-                            input.addEventListener('change', () => {
-                                if (state.questionEvaluated[roomId][index]) return;
-
-                                state.answers[roomId][index] = optIndex;
-                                state.questionEvaluated[roomId][index] = true;
-
-                                state.globalScore.totalAttempted++;
-                                if (optIndex === q.correct) state.globalScore.totalCorrect++;
-
-                                updateLiveScore();
-
-                                const allWrappers = card.querySelectorAll('.option-wrapper');
-                                card.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
-                                allWrappers.forEach(w => w.classList.add('disabled'));
-
-                                allWrappers[q.correct].classList.add('badge-pass');
-                                if (optIndex !== q.correct) {
-                                    allWrappers[optIndex].classList.add('badge-fail');
+                        
+                        // Immediate feedback on change
+                        input.addEventListener('change', () => {
+                            state.answers[roomId][index] = optIndex;
+                            saveProgress();
+                            updateProgress();
+                            
+                            // Immediate visual feedback
+                            if (!isEvaluated) {
+                                // Reset all options in this question
+                                wrapper.parentElement.querySelectorAll('.option-wrapper').forEach(w => {
+                                    w.classList.remove('correct', 'incorrect');
+                                });
+                                
+                                // Mark current selection
+                                if (optIndex === q.correct) {
+                                    wrapper.classList.add('correct');
+                                } else {
+                                    wrapper.classList.add('incorrect');
                                 }
+                            }
+                        });
 
-                                appendExplanation(card, roomId, index, q);
-                                saveProgress();
-                            });
-                        }
+                        const processedOpt = fixLatexEscaping(opt);
 
                         const textDiv = document.createElement('div');
-                        textDiv.className = 'flex-1';
-                        textDiv.innerHTML = fixLatexEscaping(opt);
-
+                        textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
+                        textDiv.innerHTML = processedOpt;
+                        
                         if (isEvaluated) {
-                            if (optIndex === q.correct) wrapper.classList.add('badge-pass');
-                            else if (isChecked) wrapper.classList.add('badge-fail');
+                            if (optIndex === q.correct) {
+                                wrapper.classList.add('badge-pass');
+                            } else if (isChecked && optIndex !== q.correct) {
+                                wrapper.classList.add('badge-fail');
+                            }
+                        } else if (isChecked) {
+                            // Show immediate feedback even if not fully evaluated
+                            if (optIndex === q.correct) {
+                                wrapper.classList.add('correct');
+                            } else {
+                                wrapper.classList.add('incorrect');
+                            }
                         }
 
                         wrapper.appendChild(input);
@@ -637,63 +693,135 @@
                         optionsContainer.appendChild(wrapper);
                     });
                     card.appendChild(optionsContainer);
+                    
                 } else if (q.type === 'subjective') {
                     const textArea = document.createElement('textarea');
-                    textArea.className = 'w-full h-40 p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm resize-y focus:outline-none focus:border-[var(--accent-indigo)]';
-                    textArea.placeholder = "اكتب إجابتك هنا...";
+                    textArea.className = 'w-full h-32 p-4 mt-2 bg-[var(--bg-body)] border border-[var(--border-color)] rounded-xl font-code text-sm text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-indigo)] transition-colors resize-none';
+                    textArea.placeholder = "Formulate your mathematical proof or logic here...";
                     textArea.value = state.answers[roomId][index] || '';
                     textArea.disabled = isEvaluated;
-
-                    if (!isEvaluated) {
-                        textArea.addEventListener('input', (e) => {
-                            state.answers[roomId][index] = e.target.value;
-                            saveProgress();
-                        });
-
-                        const showAnsBtn = document.createElement('button');
-                        showAnsBtn.type = 'button';
-                        showAnsBtn.className = 'mt-4 px-5 py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors';
-                        showAnsBtn.innerText = '👁️ إظهار الحل النموذجي';
-                        showAnsBtn.onclick = () => {
-                            state.questionEvaluated[roomId][index] = true;
-                            textArea.disabled = true;
-                            showAnsBtn.remove();
-                            appendExplanation(card, roomId, index, q);
-                            saveProgress();
-                        };
-                        card.appendChild(textArea);
-                        card.appendChild(showAnsBtn);
-                    } else {
-                        card.appendChild(textArea);
-                    }
+                    
+                    textArea.addEventListener('input', (e) => {
+                        state.answers[roomId][index] = e.target.value;
+                        saveProgress();
+                        updateProgress();
+                    });
+                    card.appendChild(textArea);
                 }
 
-                if (isEvaluated) appendExplanation(card, roomId, index, q);
+                if (isEvaluated) {
+                    const expBox = document.createElement('div');
+                    const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
+                    
+                    if (q.type === 'mcq' || q.type === 'tf') {
+                        expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
+                        expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${fixLatexEscaping(explanationText)}`;
+                    } else if (q.type === 'subjective') {
+                        expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
+                        expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
+                    }
+                    card.appendChild(expBox);
+                }
+
                 formContainer.appendChild(card);
             });
 
             MathJax.typesetPromise([formContainer]);
+            
+            updateSubmitUI();
+            updateProgress();
+            setupIntersectionObserver();
         }
 
-        function appendExplanation(card, roomId, index, q) {
-            const expBox = document.createElement('div');
-            const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح.";
+        submitBtn.addEventListener('click', () => {
+            const roomId = state.currentRoom;
+            if (state.evaluated[roomId]) return;
+            
+            const questions = examQuestions[roomId].questions;
+            let correct = 0;
+            let totalObjective = 0;
 
-            if (q.type === 'mcq') {
-                expBox.className = 'mt-5 p-5 rounded-2xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in border-l-4 border-l-[var(--accent-indigo)]';
-                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)]">Explanation:</strong><br>${fixLatexEscaping(explanationText)}`;
+            questions.forEach((q, index) => {
+                if (q.type === 'mcq' || q.type === 'tf') {
+                    totalObjective++;
+                    if (state.answers[roomId][index] === q.correct) {
+                        correct++;
+                        state.globalScore.totalCorrect++;
+                    }
+                    state.globalScore.totalAttempted++;
+                }
+            });
+
+            state.evaluated[roomId] = true;
+            saveProgress();
+            
+            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
+            globalScoreEl.innerText = `${perc}%`;
+
+            loadRoom(roomId, document.querySelector('.room-tab.active'));
+
+            roomBanner.innerHTML = `
+                <h2 class="text-2xl font-bold gradient-text mb-2">Room Completed!</h2>
+                <p class="text-[var(--text-main)]">You scored <strong>${correct}</strong> out of <strong>${totalObjective}</strong> strictly evaluated items.</p>
+                <p class="text-xs text-[var(--text-muted)] mt-2">Subjective responses have been unlocked with ideal grading keys for self-assessment.</p>
+            `;
+            roomBanner.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        function updateSubmitUI() {
+            const roomId = state.currentRoom;
+            const hasQuestions = examQuestions[roomId].questions.length > 0;
+            if (state.evaluated[roomId] || !hasQuestions) {
+                submitContainer.classList.add('hidden');
             } else {
-                expBox.className = 'mt-5 p-5 rounded-2xl bg-emerald-950/30 border border-emerald-500 text-sm fade-in';
-                expBox.innerHTML = `<strong class="text-emerald-400 block mb-2">الحل النموذجي:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
+                submitContainer.classList.remove('hidden');
+                roomBanner.classList.add('hidden');
             }
-            card.appendChild(expBox);
-            MathJax.typesetPromise([expBox]);
         }
 
-        resetBtn.addEventListener('click', () => {
-            if (confirm('هل أنت متأكد أنك تريد مسح جميع التقدم؟')) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
+        let currentScrollIndex = 0;
+        function updateProgress() {
+            const roomId = state.currentRoom;
+            const total = examQuestions[roomId].questions.length;
+            if(total === 0) return;
+            
+            const answered = Object.keys(state.answers[roomId]).filter(k => {
+                const val = state.answers[roomId][k];
+                return val !== undefined && val !== '';
+            }).length;
+            
+            navCounter.innerText = `Question ${currentScrollIndex + 1} / ${total}`;
+            navProgress.style.width = `${(answered / total) * 100}%`;
+        }
+
+        function setupIntersectionObserver() {
+            const cards = document.querySelectorAll('.question-card');
+            const options = { root: null, rootMargin: '0px', threshold: 0.5 };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        currentScrollIndex = parseInt(id.replace('qcard-', ''));
+                        updateProgress();
+                    }
+                });
+            }, options);
+
+            cards.forEach(card => observer.observe(card));
+        }
+
+        navPrev.addEventListener('click', () => {
+            if (currentScrollIndex > 0) {
+                document.getElementById(`qcard-${currentScrollIndex - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        navNext.addEventListener('click', () => {
+            const total = examQuestions[state.currentRoom].questions.length;
+            if (currentScrollIndex < total - 1) {
+                document.getElementById(`qcard-${currentScrollIndex + 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
 
