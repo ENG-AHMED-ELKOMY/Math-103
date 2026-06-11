@@ -101,7 +101,7 @@
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        .option-wrapper:hover {
+        .option-wrapper:hover:not(.disabled) {
             border-color: var(--accent-indigo);
             transform: translateY(-1px);
         }
@@ -118,7 +118,8 @@
             border-color: #ef4444 !important;
             background: rgba(239, 68, 68, 0.1) !important;
         }
-        
+        .disabled { cursor: not-allowed !important; }
+
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -152,7 +153,7 @@
 
         <div class="flex items-center gap-6">
             <div class="hidden sm:flex flex-col items-end">
-                <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Global Score</span>
+                <span class="text-sm text-[var(--text-muted)] uppercase tracking-wider font-semibold">Live Score</span>
                 <span id="global-score" class="text-2xl font-bold gradient-text">0%</span>
             </div>
             <button id="theme-toggle" class="glass-panel px-4 py-2 rounded-full text-sm font-semibold hover:scale-105 transition-transform flex items-center gap-2">
@@ -167,15 +168,12 @@
     </div>
 
     <main class="flex-grow p-4 max-w-4xl mx-auto w-full mb-32">
-        <div id="room-banner" class="hidden glass-panel rounded-2xl p-6 mb-8 text-center fade-in">
-            </div>
-
         <form id="exam-form" class="space-y-6">
             </form>
 
-        <div id="submit-container" class="hidden mt-10 flex justify-end">
-            <button type="button" id="submit-exam-btn" class="px-8 py-4 rounded-xl text-white font-bold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all transform hover:-translate-y-1" style="background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald))">
-                Evaluate Submission
+        <div class="mt-10 flex justify-center">
+            <button type="button" id="reset-exam-btn" class="px-6 py-3 rounded-xl text-[var(--text-main)] border border-red-500/50 hover:bg-red-500/10 font-bold text-sm transition-all">
+                🗑️ مسح التقدم وإعادة البدء (Reset Progress)
             </button>
         </div>
     </main>
@@ -503,24 +501,48 @@
             }
         };
 
-        const state = {
+        // =====================================================================
+        // 3. App Logic (Instant Feedback & LocalStorage)
+        // =====================================================================
+        const STORAGE_KEY = 'math103_exam_progress';
+
+        let state = {
             currentRoom: null,
             answers: {},      
-            evaluated: {},    
+            questionEvaluated: {}, // New: Track per-question evaluation
             globalScore: { totalAttempted: 0, totalCorrect: 0 }
         };
 
         const navContainer = document.getElementById('navbar-rooms-container');
         const formContainer = document.getElementById('exam-form');
-        const roomBanner = document.getElementById('room-banner');
-        const submitContainer = document.getElementById('submit-container');
-        const submitBtn = document.getElementById('submit-exam-btn');
         const themeBtn = document.getElementById('theme-toggle');
         const globalScoreEl = document.getElementById('global-score');
         const navPrev = document.getElementById('nav-prev');
         const navNext = document.getElementById('nav-next');
         const navCounter = document.getElementById('nav-counter');
         const navProgress = document.getElementById('nav-progress');
+        const resetBtn = document.getElementById('reset-exam-btn');
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                state = JSON.parse(saved);
+            } else {
+                Object.keys(examQuestions).forEach(roomId => {
+                    state.answers[roomId] = {};
+                    state.questionEvaluated[roomId] = {};
+                });
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function updateLiveScore() {
+            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
+            globalScoreEl.innerText = `${perc}%`;
+        }
 
         function fixLatexEscaping(str) {
             if (!str) return '';
@@ -535,10 +557,10 @@
         });
 
         function initApp() {
+            loadProgress();
+            updateLiveScore();
+
             Object.keys(examQuestions).forEach((roomId, index) => {
-                state.answers[roomId] = {};
-                state.evaluated[roomId] = false;
-                
                 const btn = document.createElement('button');
                 btn.className = `room-tab px-5 py-2.5 rounded-xl font-medium text-sm glass-panel border ${index === 0 ? 'active' : ''}`;
                 btn.innerText = examQuestions[roomId].title;
@@ -560,16 +582,16 @@
             void formContainer.offsetWidth; 
             formContainer.classList.add('fade-in');
             
-            const isEvaluated = state.evaluated[roomId];
             const questions = examQuestions[roomId].questions;
 
             if(questions.length === 0) {
                 formContainer.innerHTML = `<div class="text-center py-10 text-[var(--text-muted)] font-bold">لا توجد أسئلة متاحة.</div>`;
-                updateSubmitUI();
                 return;
             }
             
             questions.forEach((q, index) => {
+                const isEvaluated = state.questionEvaluated[roomId][index];
+
                 const card = document.createElement('div');
                 card.id = `qcard-${index}`;
                 card.className = 'glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden question-card';
@@ -594,7 +616,8 @@
                     q.options.forEach((opt, optIndex) => {
                         const isChecked = state.answers[roomId][index] === optIndex;
                         const wrapper = document.createElement('label');
-                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative ${isEvaluated && isChecked ? 'ring-2 ring-indigo-500' : ''}`;
+                        wrapper.className = `option-wrapper flex items-center p-4 rounded-xl cursor-pointer relative`;
+                        if(isEvaluated) wrapper.classList.add('disabled');
                         
                         const input = document.createElement('input');
                         input.type = 'radio';
@@ -604,17 +627,43 @@
                         input.checked = isChecked;
                         input.disabled = isEvaluated;
                         
-                        input.addEventListener('change', () => {
-                            state.answers[roomId][index] = optIndex;
-                            updateProgress();
-                        });
+                        // Instant Feedback Logic
+                        if (!isEvaluated) {
+                            input.addEventListener('change', () => {
+                                if(state.questionEvaluated[roomId][index]) return;
+                                
+                                state.answers[roomId][index] = optIndex;
+                                state.questionEvaluated[roomId][index] = true;
+                                
+                                // Score Logic
+                                state.globalScore.totalAttempted++;
+                                if(optIndex === q.correct) state.globalScore.totalCorrect++;
+                                updateLiveScore();
+                                
+                                // Lock inputs & Styling
+                                const allWrappers = card.querySelectorAll('.option-wrapper');
+                                card.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+                                allWrappers.forEach(w => w.classList.add('disabled'));
+
+                                allWrappers[q.correct].classList.add('badge-pass');
+                                if (optIndex !== q.correct) {
+                                    allWrappers[optIndex].classList.add('badge-fail');
+                                }
+                                
+                                // Show Explanation
+                                appendExplanation(card, roomId, index, q);
+                                
+                                saveProgress();
+                                updateProgress();
+                            });
+                        }
 
                         const processedOpt = fixLatexEscaping(opt);
-
                         const textDiv = document.createElement('div');
                         textDiv.className = 'flex-grow text-[var(--text-main)] text-sm';
                         textDiv.innerHTML = processedOpt;
                         
+                        // Render loaded state
                         if (isEvaluated) {
                             if (optIndex === q.correct) {
                                 wrapper.classList.add('badge-pass');
@@ -636,82 +685,64 @@
                     textArea.value = state.answers[roomId][index] || '';
                     textArea.disabled = isEvaluated;
                     
-                    textArea.addEventListener('input', (e) => {
-                        state.answers[roomId][index] = e.target.value;
-                        updateProgress();
-                    });
-                    card.appendChild(textArea);
+                    if (!isEvaluated) {
+                        textArea.addEventListener('input', (e) => {
+                            state.answers[roomId][index] = e.target.value;
+                            saveProgress();
+                            updateProgress();
+                        });
+
+                        const showAnsBtn = document.createElement('button');
+                        showAnsBtn.type = 'button';
+                        showAnsBtn.className = 'mt-4 px-5 py-2.5 rounded-lg text-sm font-bold bg-[var(--border-color)] hover:bg-[var(--accent-indigo)] hover:text-white transition-colors text-[var(--text-main)]';
+                        showAnsBtn.innerText = '👁️ إظهار الحل النموذجي';
+                        showAnsBtn.onclick = (e) => {
+                            e.preventDefault();
+                            state.questionEvaluated[roomId][index] = true;
+                            textArea.disabled = true;
+                            showAnsBtn.remove();
+                            appendExplanation(card, roomId, index, q);
+                            saveProgress();
+                            updateProgress();
+                        };
+                        card.appendChild(showAnsBtn);
+                    }
                 }
 
                 if (isEvaluated) {
-                    const expBox = document.createElement('div');
-                    const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
-                    
-                    if (q.type === 'mcq' || q.type === 'tf') {
-                        expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
-                        expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${fixLatexEscaping(explanationText)}`;
-                    } else if (q.type === 'subjective') {
-                        expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
-                        expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
-                    }
-                    card.appendChild(expBox);
+                    appendExplanation(card, roomId, index, q);
                 }
 
                 formContainer.appendChild(card);
             });
 
             MathJax.typesetPromise([formContainer]);
-            
-            updateSubmitUI();
             updateProgress();
             setupIntersectionObserver();
         }
 
-        submitBtn.addEventListener('click', () => {
-            const roomId = state.currentRoom;
-            if (state.evaluated[roomId]) return;
+        function appendExplanation(card, roomId, index, q) {
+            const expBox = document.createElement('div');
+            const explanationText = examExplanations[roomId]?.[index] || "لم يتم توفير شرح في قاعدة البيانات.";
             
-            const questions = examQuestions[roomId].questions;
-            let correct = 0;
-            let totalObjective = 0;
-
-            questions.forEach((q, index) => {
-                if (q.type === 'mcq' || q.type === 'tf') {
-                    totalObjective++;
-                    if (state.answers[roomId][index] === q.correct) {
-                        correct++;
-                        state.globalScore.totalCorrect++;
-                    }
-                    state.globalScore.totalAttempted++;
-                }
-            });
-
-            state.evaluated[roomId] = true;
-            
-            const perc = state.globalScore.totalAttempted === 0 ? 0 : Math.round((state.globalScore.totalCorrect / state.globalScore.totalAttempted) * 100);
-            globalScoreEl.innerText = `${perc}%`;
-
-            loadRoom(roomId, document.querySelector('.room-tab.active'));
-
-            roomBanner.innerHTML = `
-                <h2 class="text-2xl font-bold gradient-text mb-2">Room Completed!</h2>
-                <p class="text-[var(--text-main)]">You scored <strong>${correct}</strong> out of <strong>${totalObjective}</strong> strictly evaluated items.</p>
-                <p class="text-xs text-[var(--text-muted)] mt-2">Subjective responses have been unlocked with ideal grading keys for self-assessment.</p>
-            `;
-            roomBanner.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        function updateSubmitUI() {
-            const roomId = state.currentRoom;
-            const hasQuestions = examQuestions[roomId].questions.length > 0;
-            if (state.evaluated[roomId] || !hasQuestions) {
-                submitContainer.classList.add('hidden');
-            } else {
-                submitContainer.classList.remove('hidden');
-                roomBanner.classList.add('hidden');
+            if (q.type === 'mcq' || q.type === 'tf') {
+                expBox.className = 'mt-4 p-4 rounded-xl bg-[var(--bg-body)] border border-[var(--accent-indigo)] text-sm fade-in opacity-90 border-l-4 border-l-[var(--accent-indigo)]';
+                expBox.innerHTML = `<strong class="text-[var(--accent-indigo)] block mb-1">Explanation:</strong> ${fixLatexEscaping(explanationText)}`;
+            } else if (q.type === 'subjective') {
+                expBox.className = 'mt-4 p-4 rounded-xl badge-pass border text-sm font-code flex flex-col gap-2 fade-in';
+                expBox.innerHTML = `<strong class="text-[var(--accent-emerald)] font-sans">Ideal Solution / Grading Key:</strong><span class="whitespace-pre-wrap">${fixLatexEscaping(explanationText)}</span>`;
             }
+            card.appendChild(expBox);
+            MathJax.typesetPromise([expBox]);
         }
+
+        // Reset Exam Functionality
+        resetBtn.addEventListener('click', () => {
+            if(confirm('هل أنت متأكد أنك تريد مسح جميع إجاباتك وإعادة البدء من جديد؟')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        });
 
         let currentScrollIndex = 0;
         function updateProgress() {
